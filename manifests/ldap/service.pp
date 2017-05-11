@@ -1,4 +1,4 @@
-#
+# @!visibility private
 class yp::ldap::service {
 
   service { $::yp::ldap::service_name:

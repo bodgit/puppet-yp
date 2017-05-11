@@ -1,4 +1,4 @@
-#
+# @!visibility private
 class yp::serv::service {
 
   service { $::yp::serv::ypserv_service_name:

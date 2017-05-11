@@ -1,4 +1,4 @@
-#
+# @!visibility private
 class yp::ldap::config {
 
   $base_dn          = $::yp::ldap::base_dn
@@ -20,6 +20,6 @@ class yp::ldap::config {
     owner   => 0,
     group   => 0,
     mode    => '0640',
-    content => template('yp/ypldap.conf.erb'),
+    content => template("${module_name}/ypldap.conf.erb"),
   }
 }

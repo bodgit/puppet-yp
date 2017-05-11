@@ -20,7 +20,7 @@ B=
 # slave servers (NOPUSH=true). If you have slave servers, change this
 # to "NOPUSH=false" and put all hostnames of your slave servers in the file
 # /var/yp/ypservers.
-NOPUSH=<%= @slaves.size > 0 ? 'false' : 'true' %>
+NOPUSH=<%= @slaves ? 'false' : 'true' %>
 
 # yppush copies updated NIS databases (or maps) from the master NIS server 
 # to the slave servers within a NIS domain and listens for their answer. 

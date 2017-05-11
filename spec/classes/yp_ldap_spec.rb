@@ -21,61 +21,56 @@ describe 'yp::ldap' do
   end
 
   on_supported_os.each do |os, facts|
-    context "on #{os}" do
+
+    next if os !~ /^openbsd/
+
+    context "on #{os}", :compile do
       let(:facts) do
         facts
       end
 
-      case facts[:osfamily]
-      when 'OpenBSD'
-        it { should compile.with_all_deps }
-        it { should contain_anchor('yp::ldap::begin') }
-        it { should contain_anchor('yp::ldap::end') }
-        it { should contain_class('yp::ldap') }
-        it { should contain_class('yp::ldap::config') }
-        it { should contain_class('yp::ldap::service') }
-        it { should contain_class('yp::params') }
-        it do
-          should contain_file('/etc/ypldap.conf').with_content(<<-EOS.gsub(/^ +/, ''))
-            # !!! Managed by Puppet !!!
+      it { should contain_class('yp::ldap') }
+      it { should contain_class('yp::ldap::config') }
+      it { should contain_class('yp::ldap::service') }
+      it { should contain_class('yp::params') }
+      it do
+        should contain_file('/etc/ypldap.conf').with_content(<<-EOS.gsub(/^ +/, ''))
+          # !!! Managed by Puppet !!!
 
-            domain		"example.com"
-            interval	60
-            provide map	"passwd.byname"
-            provide map	"passwd.byuid"
-            provide map	"group.byname"
-            provide map	"group.bygid"
-            provide map	"netid.byname"
+          domain		"example.com"
+          interval	60
+          provide map	"passwd.byname"
+          provide map	"passwd.byuid"
+          provide map	"group.byname"
+          provide map	"group.bygid"
+          provide map	"netid.byname"
 
-            directory "127.0.0.1" {
-            	basedn "dc=example,dc=com"
+          directory "127.0.0.1" {
+          	basedn "dc=example,dc=com"
 
-            	passwd filter "(objectClass=posixAccount)"
+          	passwd filter "(objectClass=posixAccount)"
 
-            	attribute name maps to "uid"
-            	fixed attribute passwd "*"
-            	attribute uid maps to "uidNumber"
-            	attribute gid maps to "gidNumber"
-            	attribute gecos maps to "cn"
-            	attribute home maps to "homeDirectory"
-            	attribute shell maps to "loginShell"
-            	fixed attribute change "0"
-            	fixed attribute expire "0"
-            	fixed attribute class "ldap"
+          	attribute name maps to "uid"
+          	fixed attribute passwd "*"
+          	attribute uid maps to "uidNumber"
+          	attribute gid maps to "gidNumber"
+          	attribute gecos maps to "cn"
+          	attribute home maps to "homeDirectory"
+          	attribute shell maps to "loginShell"
+          	fixed attribute change "0"
+          	fixed attribute expire "0"
+          	fixed attribute class "ldap"
 
-            	group filter "(objectClass=posixGroup)"
+          	group filter "(objectClass=posixGroup)"
 
-            	attribute groupname maps to "cn"
-            	fixed attribute grouppasswd "*"
-            	attribute groupgid maps to "gidNumber"
-            	list groupmembers maps to "memberUid"
-            }
-          EOS
-        end
-        it { should contain_service('ypldap') }
-      else
-        it { expect { should compile }.to raise_error(/The yp::ldap class is not supported on/) }
+          	attribute groupname maps to "cn"
+          	fixed attribute grouppasswd "*"
+          	attribute groupgid maps to "gidNumber"
+          	list groupmembers maps to "memberUid"
+          }
+        EOS
       end
+      it { should contain_service('ypldap') }
     end
   end
 end

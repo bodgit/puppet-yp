@@ -1,4 +1,4 @@
-#
+# @!visibility private
 class yp::params {
 
   $serv_merge_group  = true
@@ -98,14 +98,14 @@ class yp::params {
         'locale.byname',
         'netmasks.byaddr',
       ]
-      $serv_map_extension          = '' # lint:ignore:empty_string_assignment
+      $serv_map_extension          = undef
       $serv_package_name           = 'ypserv'
       $serv_yppasswdd_service_name = 'yppasswdd'
       $serv_ypserv_service_name    = 'ypserv'
       $serv_ypxfrd_service_name    = 'ypxfrd'
     }
     default: {
-      fail("The ${module_name} module is not supported on ${::osfamily} based systems.") # lint:ignore:80chars
+      fail("The ${module_name} module is not supported on ${::osfamily} based systems.")
     }
   }
 }

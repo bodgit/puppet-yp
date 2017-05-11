@@ -1,4 +1,4 @@
-#
+# @!visibility private
 class yp::serv::install {
 
   if $::yp::serv::manage_package {

@@ -1,4 +1,6 @@
 # !!! Managed by Puppet !!!
-<% @servers.each do |s| -%>
+<% if @servers -%>
+<%   @servers.each do |s| -%>
 ypserver <%= s %>
+<%   end -%>
 <% end -%>

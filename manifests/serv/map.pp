@@ -1,28 +1,22 @@
-#
+# @!visibility private
 define yp::serv::map (
-  $domain,
-  $extension,
-  $master,
-  $yp_dir,
+  Bodgitlib::Domain               $domain,
+  Optional[String]                $extension,
+  Optional[IP::Address::NoSubnet] $master,
+  Stdlib::Absolutepath            $yp_dir,
+  String                          $map       = $name,
 ) {
 
   if $master {
-    exec { "ypxfr -h ${master} -c -d ${domain} ${name}":
-      path    => [
-        '/sbin',
-        '/usr/sbin',
-        '/bin',
-        '/usr/bin',
-        '/usr/lib/yp',
-        '/usr/lib64/yp',
-      ],
-      creates => "${yp_dir}/${domain}/${name}${extension}",
+    exec { "ypxfr -h ${master} -c -d ${domain} ${map}":
+      path    => "${::path}:/usr/lib/yp:/usr/lib64/yp",
+      creates => "${yp_dir}/${domain}/${map}${extension}",
       require => File["${yp_dir}/${domain}"],
     }
   } else {
     $target = yp_map_to_make_target($name)
 
-    case $::osfamily { # lint:ignore:case_without_default
+    case $::osfamily {
       'OpenBSD': {
         $make     = "make ${target}"
         $makefile = "${yp_dir}/${domain}/Makefile"
@@ -31,6 +25,9 @@ define yp::serv::map (
         $make     = "make -f ../Makefile ${target}"
         $makefile = "${yp_dir}/Makefile"
       }
+      default: {
+        # noop
+      }
     }
 
     # The exec is created and tested against the first map generated from the
@@ -38,16 +35,9 @@ define yp::serv::map (
     # will be created to only check that passwd.byname.db is created on disk
     if ! defined(Exec[$make]) {
       exec { $make:
-        path    => [
-          '/sbin',
-          '/usr/sbin',
-          '/bin',
-          '/usr/bin',
-          '/usr/lib/yp',
-          '/usr/lib64/yp',
-        ],
+        path    => "${::path}:/usr/lib/yp:/usr/lib64/yp",
         cwd     => "${yp_dir}/${domain}",
-        creates => "${yp_dir}/${domain}/${name}${extension}",
+        creates => "${yp_dir}/${domain}/${map}${extension}",
         require => File[$makefile],
       }
     }

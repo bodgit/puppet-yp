@@ -24,8 +24,6 @@ describe 'yp' do
         facts
       end
 
-      it { should contain_anchor('yp::begin') }
-      it { should contain_anchor('yp::end') }
       it { should contain_class('yp') }
       it { should contain_class('yp::config') }
       it { should contain_class('yp::params') }

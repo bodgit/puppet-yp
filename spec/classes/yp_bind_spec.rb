@@ -26,8 +26,6 @@ describe 'yp::bind' do
         })
       end
 
-      it { should contain_anchor('yp::bind::begin') }
-      it { should contain_anchor('yp::bind::end') }
       it { should contain_class('yp::bind') }
       it { should contain_class('yp::bind::install') }
       it { should contain_class('yp::bind::config') }

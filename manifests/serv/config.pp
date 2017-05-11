@@ -1,4 +1,4 @@
-#
+# @!visibility private
 class yp::serv::config {
 
   $domain       = $::yp::serv::domain
@@ -19,20 +19,20 @@ class yp::serv::config {
   }
 
   if $master {
-    $_maps = flatten([$maps, 'ypservers'])
+    $_maps = $maps + 'ypservers'
   } else {
 
     $targets = yp_map_to_make_target($maps)
     $_maps   = $maps
 
-    case $::osfamily { # lint:ignore:case_without_default
+    case $::osfamily {
       'OpenBSD': {
         file { "${yp_dir}/Makefile":
           ensure  => file,
           owner   => 0,
           group   => 0,
           mode    => '0644',
-          content => template('yp/Makefile.main.erb'),
+          content => template("${module_name}/Makefile.main.erb"),
         }
 
         file { "${yp_dir}/${domain}/Makefile":
@@ -40,7 +40,7 @@ class yp::serv::config {
           owner   => 0,
           group   => 0,
           mode    => '0644',
-          content => template('yp/Makefile.yp.erb'),
+          content => template("${module_name}/Makefile.yp.erb"),
         }
       }
       'RedHat': {
@@ -49,8 +49,11 @@ class yp::serv::config {
           owner   => 0,
           group   => 0,
           mode    => '0644',
-          content => template('yp/Makefile.erb'),
+          content => template("${module_name}/Makefile.erb"),
         }
+      }
+      default: {
+        # noop
       }
     }
 
@@ -58,19 +61,12 @@ class yp::serv::config {
       owner   => 0,
       group   => 0,
       mode    => '0644',
-      content => template('yp/ypservers.erb'),
+      content => template("${module_name}/ypservers.erb"),
     }
 
     # Not sure I like this but it's essentially how the map is built
-    exec { "awk '{ if (\$1 != \"\" && \$1 !~ \"#\") print \$0\"\\t\"\$0 }' ${yp_dir}/ypservers | makedbm - ${yp_dir}/${domain}/ypservers": # lint:ignore:80chars
-      path        => [
-        '/sbin',
-        '/usr/sbin',
-        '/bin',
-        '/usr/bin',
-        '/usr/lib/yp',
-        '/usr/lib64/yp',
-      ],
+    exec { "awk '{ if (\$1 != \"\" && \$1 !~ \"#\") print \$0\"\\t\"\$0 }' ${yp_dir}/ypservers | makedbm - ${yp_dir}/${domain}/ypservers":
+      path        => "${::path}:/usr/lib/yp:/usr/lib64/yp",
       refreshonly => true,
       require     => File["${yp_dir}/${domain}"],
       subscribe   => File["${yp_dir}/ypservers"],

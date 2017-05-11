@@ -1,4 +1,4 @@
-#
+# @!visibility private
 class yp::bind::install {
 
   if $::yp::bind::manage_package {

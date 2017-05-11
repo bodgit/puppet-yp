@@ -28,8 +28,6 @@ describe 'yp::serv' do
         )
       end
 
-      it { should contain_anchor('yp::serv::begin') }
-      it { should contain_anchor('yp::serv::end') }
       it { should contain_class('yp::serv') }
       it { should contain_class('yp::serv::config') }
       it { should contain_class('yp::serv::install') }

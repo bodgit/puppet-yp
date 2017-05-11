@@ -1,10 +1,10 @@
-#
+# @!visibility private
 class yp::bind::config {
 
   $domain  = $::yp::bind::domain
   $servers = $::yp::bind::servers
 
-  case $::osfamily { # lint:ignore:case_without_default
+  case $::osfamily {
     'OpenBSD': {
       file { '/etc/yp':
         ensure  => directory,
@@ -15,13 +15,13 @@ class yp::bind::config {
         recurse => true,
       }
 
-      if size($servers) > 0 {
+      if $servers {
         file { "/etc/yp/${domain}":
           ensure  => file,
           owner   => 0,
           group   => 0,
           mode    => '0644',
-          content => template('yp/domain.erb'),
+          content => template("${module_name}/domain.erb"),
         }
       }
 
@@ -43,7 +43,7 @@ class yp::bind::config {
       }
 
       exec { 'pwd_mkdb -p /etc/master.passwd':
-        path        => ['/usr/sbin'],
+        path        => $::path,
         refreshonly => true,
         subscribe   => Augeas['/etc/master.passwd/nisdefault'],
       }
@@ -64,7 +64,7 @@ class yp::bind::config {
           owner   => 0,
           group   => 0,
           mode    => '0644',
-          content => file('yp/passwd.aug'),
+          content => file("${module_name}/passwd.aug"),
         }
       }
 
@@ -74,7 +74,7 @@ class yp::bind::config {
           owner   => 0,
           group   => 0,
           mode    => '0644',
-          content => file('yp/masterpasswd.aug'),
+          content => file("${module_name}/masterpasswd.aug"),
           before  => Augeas['/etc/master.passwd/nisdefault'],
         }
 
@@ -83,7 +83,7 @@ class yp::bind::config {
           owner   => 0,
           group   => 0,
           mode    => '0644',
-          content => file('yp/group.aug'),
+          content => file("${module_name}/group.aug"),
           before  => Augeas['/etc/group/nisdefault'],
         }
       }
@@ -94,7 +94,7 @@ class yp::bind::config {
         owner   => 0,
         group   => 0,
         mode    => '0644',
-        content => template('yp/yp.conf.erb'),
+        content => template("${module_name}/yp.conf.erb"),
       }
 
       class { '::nsswitch':
@@ -121,6 +121,9 @@ class yp::bind::config {
           'use_authtok',
         ],
       }
+    }
+    default: {
+      # noop
     }
   }
 }

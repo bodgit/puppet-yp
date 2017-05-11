@@ -1,9 +1,9 @@
-#
+# @!visibility private
 class yp::config {
 
   $domain = $::yp::domain
 
-  case $::osfamily { # lint:ignore:case_without_default
+  case $::osfamily {
     'OpenBSD': {
       file { '/etc/defaultdomain':
         ensure  => file,
@@ -22,10 +22,13 @@ class yp::config {
         ],
       }
     }
+    default: {
+      # noop
+    }
   }
 
   exec { "domainname ${domain}":
-    path   => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+    path   => $::path,
     unless => "domainname | grep -q ^${domain}\$",
   }
 

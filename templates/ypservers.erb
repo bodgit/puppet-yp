@@ -1,4 +1,6 @@
 <%= @hostname %>
-<% @slaves.each do |s| -%>
+<% if @slaves -%>
+<%   @slaves.each do |s| -%>
 <%= s %>
+<%   end -%>
 <% end -%>

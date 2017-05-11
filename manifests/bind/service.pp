@@ -1,4 +1,4 @@
-#
+# @!visibility private
 class yp::bind::service {
 
   service { $::yp::bind::service_name:
