@@ -1,16 +1,11 @@
 require 'spec_helper'
 
-describe 'yp_map_to_make_target' do
-
-  let(:scope) { PuppetlabsSpec::PuppetInternals.scope }
+describe 'yp::map_to_make_target' do
 
   on_supported_os.each do |os, facts|
     context "on #{os}" do
-      before :each do
-        facts.each do |k, v|
-          scope.stubs(:lookupvar).with("::#{k}").returns(v)
-          scope.stubs(:lookupvar).with(k.to_s).returns(v)
-        end
+      let(:facts) do
+        facts
       end
 
       case facts[:osfamily]
@@ -27,9 +22,9 @@ describe 'yp_map_to_make_target' do
 
       end
 
-      it { expect { should run.with_params({}) }.to raise_error(/Requires array or string to work with/) }
       it { should run.with_params(map).and_return(target) }
       it { should run.with_params(maps).and_return(targets) }
+      it { expect { should run.with_params({}) }.to raise_error(/parameter 'maps' /) }
     end
   end
 end

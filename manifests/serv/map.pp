@@ -14,7 +14,7 @@ define yp::serv::map (
       require => File["${yp_dir}/${domain}"],
     }
   } else {
-    $target = yp_map_to_make_target($name)
+    $target = yp::map_to_make_target($map)
 
     case $::osfamily {
       'OpenBSD': {

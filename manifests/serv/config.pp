@@ -22,7 +22,7 @@ class yp::serv::config {
     $_maps = $maps + 'ypservers'
   } else {
 
-    $targets = yp_map_to_make_target($maps)
+    $targets = yp::map_to_make_target($maps)
     $_maps   = $maps
 
     case $::osfamily {
