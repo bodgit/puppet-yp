@@ -181,7 +181,7 @@ This module has been built on and tested against Puppet 4.4.0 and higher.
 The module has been tested on:
 
 * RedHat Enterprise Linux 7
-* OpenBSD 6.0
+* OpenBSD 6.0/6.1
 
 ## Development
 
