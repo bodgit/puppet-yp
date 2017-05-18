@@ -32,17 +32,20 @@ OpenBSD manage the `ypldap` daemon to fetch YP maps from LDAP.
 
 ### What yp affects
 
-This module will alter the following system files in order to use YP maps:
-
-* On OpenBSD it will add the traditional `+::...` entries to the bottom of the
-  `/etc/passwd` and `/etc/group` files.
-* On Linux it will manage the `/etc/nsswitch.conf` file and adjust the main PAM
-  configuration.
+On OpenBSD this module will add the traditional `+::...` entries to the bottom
+of the `/etc/passwd` and `/etc/group` files.
 
 ### Setup Requirements
 
 You will need to manage the RPC portmapper by using
 [bodgit/portmap](https://forge.puppet.com/bodgit/portmap) or by other means.
+
+On Linux you will need to adjust the `/etc/nsswitch.conf` file and PAM
+configuration yourself. Both
+[trlinkin/nsswitch](https://forge.puppet.com/trlinkin/nsswitch)
+and
+[herculesteam/augeasproviders_pam](https://forge.puppet.com/herculesteam/augeasproviders_pam)
+are known to work and used in the examples and tests in this module.
 
 ### Beginning with yp
 
@@ -61,6 +64,35 @@ class { '::yp::bind':
 }
 
 Class['::portmap'] ~> Class['::yp::bind'] <~ Class['::yp']
+
+if $::osfamily == 'RedHat' {
+  class { '::nsswitch':
+    passwd    => ['files', 'nis', 'sss'],
+    shadow    => ['files', 'nis', 'sss'],
+    group     => ['files', 'nis', 'sss'],
+    hosts     => ['files', 'nis', 'dns'],
+    netgroup  => ['files', 'nis', 'sss'],
+    automount => ['files', 'nis'],
+    require   => Class['::yp::bind'],
+  }
+
+  pam { 'nis':
+    ensure    => present,
+    service   => 'system-auth-ac',
+    type      => 'password',
+    control   => 'sufficient',
+    module    => 'pam_unix.so',
+    arguments => [
+      'md5',
+      'shadow',
+      'nis',
+      'nullok',
+      'try_first_pass',
+      'use_authtok',
+    ],
+    require   => Class['::yp::bind'],
+  }
+}
 ```
 
 ## Usage

@@ -45,10 +45,8 @@ describe 'yp::bind' do
         it { should contain_file('/usr/local/share/augeas/lenses/passwd.aug') }
         it { should have_package_resource_count(0) }
       else
-        it { should contain_class('nsswitch') }
         it { should contain_file('/etc/yp.conf') }
         it { should contain_package('ypbind') }
-        it { should contain_pam('nis') }
       end
     end
   end

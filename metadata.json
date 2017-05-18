@@ -70,14 +70,6 @@
     {
       "name": "thrnio/ip",
       "version_requirement": ">=1.0.0 <2.0.0"
-    },
-    {
-      "name": "trlinkin/nsswitch",
-      "version_requirement": ">=1.1.0 <2.0.0"
-    },
-    {
-      "name": "herculesteam/augeasproviders_pam",
-      "version_requirement": ">=2.1.0 <3.0.0"
     }
   ]
 }

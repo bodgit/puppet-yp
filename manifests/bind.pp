@@ -18,6 +18,35 @@
 #
 #   Class['::portmap'] ~> Class['::yp::bind'] <~ Class['::yp']
 #
+#   if $::osfamily == 'RedHat' {
+#     class { '::nsswitch':
+#       passwd    => ['files', 'nis', 'sss'],
+#       shadow    => ['files', 'nis', 'sss'],
+#       group     => ['files', 'nis', 'sss'],
+#       hosts     => ['files', 'nis', 'dns'],
+#       netgroup  => ['files', 'nis', 'sss'],
+#       automount => ['files', 'nis'],
+#       require   => Class['::yp::bind'],
+#     }
+#
+#     pam { 'nis':
+#       ensure    => present,
+#       service   => 'system-auth-ac',
+#       type      => 'password',
+#       control   => 'sufficient',
+#       module    => 'pam_unix.so',
+#       arguments => [
+#         'md5',
+#         'shadow',
+#         'nis',
+#         'nullok',
+#         'try_first_pass',
+#         'use_authtok',
+#       ],
+#       require   => Class['::yp::bind'],
+#     }
+#   }
+#
 # @param domain The YP/NIS domain.
 # @param servers An array of YP servers to use, if left undefined will default
 #   to broadcasting.

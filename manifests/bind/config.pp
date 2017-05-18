@@ -96,31 +96,6 @@ class yp::bind::config {
         mode    => '0644',
         content => template("${module_name}/yp.conf.erb"),
       }
-
-      class { '::nsswitch':
-        passwd    => ['files', 'nis', 'sss'],
-        shadow    => ['files', 'nis', 'sss'],
-        group     => ['files', 'nis', 'sss'],
-        hosts     => ['files', 'nis', 'dns'],
-        netgroup  => ['files', 'nis', 'sss'],
-        automount => ['files', 'nis'],
-      }
-
-      pam { 'nis':
-        ensure    => present,
-        service   => 'system-auth-ac',
-        type      => 'password',
-        control   => 'sufficient',
-        module    => 'pam_unix.so',
-        arguments => [
-          'md5',
-          'shadow',
-          'nis',
-          'nullok',
-          'try_first_pass',
-          'use_authtok',
-        ],
-      }
     }
     default: {
       # noop

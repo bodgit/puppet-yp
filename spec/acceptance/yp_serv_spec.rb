@@ -35,6 +35,35 @@ describe 'yp::serv' do
         ],
       }
 
+      if $::osfamily == 'RedHat' {
+        class { '::nsswitch':
+          passwd    => ['files', 'nis', 'sss'],
+          shadow    => ['files', 'nis', 'sss'],
+          group     => ['files', 'nis', 'sss'],
+          hosts     => ['files', 'nis', 'dns'],
+          netgroup  => ['files', 'nis', 'sss'],
+          automount => ['files', 'nis'],
+          require   => Class['::yp::bind'],
+        }
+
+        pam { 'nis':
+          ensure    => present,
+          service   => 'system-auth-ac',
+          type      => 'password',
+          control   => 'sufficient',
+          module    => 'pam_unix.so',
+          arguments => [
+            'md5',
+            'shadow',
+            'nis',
+            'nullok',
+            'try_first_pass',
+            'use_authtok',
+          ],
+          require   => Class['::yp::bind'],
+        }
+      }
+
       class { '::yp::serv':
         domain => 'example.com',
         maps   => ['#{maps.join("', '")}'],
