@@ -51,6 +51,8 @@
 #   Class['::yp::serv'] ~> Class['::yp::bind'] <- Class['::yp']
 #
 # @param domain The YP/NIS domain.
+# @param has_yppasswdd Does this platform provide `yppasswdd` daemon for
+#   changing passwords.
 # @param has_ypxfrd Does this platform provide a `ypxfrd`  daemon to help map
 #   transfers.
 # @param manage_package Whether to manage a package or not. Some operating
@@ -80,6 +82,7 @@
 # @see puppet_classes::yp::ldap ::yp::ldap
 class yp::serv (
   Bodgitlib::Domain                         $domain,
+  Boolean                                   $has_yppasswdd          = $::yp::params::serv_has_yppasswdd,
   Boolean                                   $has_ypxfrd             = $::yp::params::serv_has_ypxfrd,
   Boolean                                   $manage_package         = $::yp::params::serv_manage_package,
   Array[String, 1]                          $maps                   = $::yp::params::serv_maps,
@@ -90,7 +93,7 @@ class yp::serv (
   Integer[0]                                $minimum_gid            = $::yp::params::serv_minimum_gid,
   Integer[0]                                $minimum_uid            = $::yp::params::serv_minimum_uid,
   Optional[String]                          $package_name           = $::yp::params::serv_package_name,
-  String                                    $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
+  Optional[String]                          $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
   String                                    $ypserv_service_name    = $::yp::params::serv_ypserv_service_name,
   Optional[String]                          $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,
   Optional[Array[IP::Address::NoSubnet, 1]] $slaves                 = undef,

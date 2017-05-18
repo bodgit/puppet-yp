@@ -3,14 +3,75 @@ require 'spec_helper_acceptance'
 describe 'yp::ldap' do
 
   pp = <<-EOS
+    Package {
+      source => $::osfamily ? {
+        # $::architecture fact has gone missing on facter 3.x package currently installed
+        'OpenBSD' => "http://ftp.openbsd.org/pub/OpenBSD/${::operatingsystemrelease}/packages/amd64/",
+        default   => undef,
+      },
+    }
+
+    include ::openldap
+    class { '::openldap::server':
+      root_dn       => 'cn=Manager,dc=example,dc=com',
+      root_password => 'secret',
+      suffix        => 'dc=example,dc=com',
+      access        => [
+        [
+          {
+            'attrs' => ['userPassword'],
+          },
+          [
+            {
+              'who'    => ['self'],
+              'access' => '=xw',
+            },
+            {
+              'who'    => ['anonymous'],
+              'access' => 'auth',
+            },
+          ],
+        ],
+        [
+          {
+            'dn' => '*',
+          },
+          [
+            {
+              'who'    => ['dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth"'],
+              'access' => 'manage',
+            },
+            {
+              'who'    => ['users'],
+              'access' => 'read',
+            },
+          ],
+        ],
+      ],
+    }
+
+    ::openldap::server::schema { 'cosine':
+      ensure => present,
+    }
+    ::openldap::server::schema { 'inetorgperson':
+      ensure  => present,
+      require => ::Openldap::Server::Schema['cosine'],
+    }
+    ::openldap::server::schema { 'nis':
+      ensure  => present,
+      require => ::Openldap::Server::Schema['inetorgperson'],
+    }
+
     include ::portmap
 
     class { '::yp::ldap':
-      base_dn => 'dc=example,dc=com',
-      bind_dn => 'uid=test,ou=people,dc=example,dc=com',
-      bind_pw => 'password',
-      domain  => 'example.com',
-      server  => '#{ENV["BODGIT_YP_LDAP_SERVER"]}',
+      base_dn  => 'dc=example,dc=com',
+      bind_dn  => 'cn=ypldap,dc=example,dc=com',
+      bind_pw  => 'password',
+      domain   => 'example.com',
+      interval => 1,
+      server   => '127.0.0.1',
+      require  => Class['::openldap::server'],
     }
 
     class { '::yp':
@@ -31,6 +92,15 @@ describe 'yp::ldap' do
       apply_manifest(pp, :catch_changes  => true)
     end
 
+    describe command('ldapadd -Y EXTERNAL -H ldapi:/// -f /root/example.ldif') do
+      its(:exit_status) { should eq 0 }
+    end
+
+    # A small sleep so ypldap has chance to pick up the LDAP import
+    describe command('sleep 5') do
+      its(:exit_status) { should eq 0 }
+    end
+
     describe file('/etc/ypldap.conf') do
       it { should be_file }
       it { should be_mode 640 }
@@ -48,8 +118,8 @@ describe 'yp::ldap' do
       it { should be_mode 600 }
       it { should be_owned_by 'root' }
       it { should be_grouped_into 'wheel' }
-      its(:content) { should match /^\+:\*::::::::$/ }
-      its(:content) { should_not match /^test:/ }
+      its(:content) { should match /^ \+ : \* :::::::: $/x }
+      its(:content) { should_not match /^ alice :/x }
     end
 
     describe file('/etc/passwd') do
@@ -57,8 +127,8 @@ describe 'yp::ldap' do
       it { should be_mode 644 }
       it { should be_owned_by 'root' }
       it { should be_grouped_into 'wheel' }
-      its(:content) { should match /^\+:\*:0:0:::$/ }
-      its(:content) { should_not match /^test:/ }
+      its(:content) { should match /^ \+ : \* :0:0::: $/x }
+      its(:content) { should_not match /^ alice :/x }
     end
 
     describe file('/etc/group') do
@@ -66,8 +136,8 @@ describe 'yp::ldap' do
       it { should be_mode 644 }
       it { should be_owned_by 'root' }
       it { should be_grouped_into 'wheel' }
-      its(:content) { should match /^\+:\*::$/ }
-      its(:content) { should_not match /^test:/ }
+      its(:content) { should match /^ \+ : \* :: $/x }
+      its(:content) { should_not match /^ alice :/x }
     end
 
     describe file('/etc/defaultdomain') do
@@ -90,23 +160,23 @@ describe 'yp::ldap' do
 
     describe command('rpcinfo -p') do
       its(:exit_status) { should eq 0 }
-      its(:stdout) { should match /100004\s+2\s+tcp\s+\d+\s+ypserv/ }
-      its(:stdout) { should match /100004\s+2\s+udp\s+\d+\s+ypserv/ }
-      its(:stdout) { should match /100007\s+2\s+tcp\s+\d+\s+ypbind/ }
-      its(:stdout) { should match /100007\s+2\s+udp\s+\d+\s+ypbind/ }
+      its(:stdout) { should match /100004 \s+ 2 \s+ tcp \s+ \d+ \s+ ypserv/x }
+      its(:stdout) { should match /100004 \s+ 2 \s+ udp \s+ \d+ \s+ ypserv/x }
+      its(:stdout) { should match /100007 \s+ 2 \s+ tcp \s+ \d+ \s+ ypbind/x }
+      its(:stdout) { should match /100007 \s+ 2 \s+ udp \s+ \d+ \s+ ypbind/x }
     end
 
-    describe group('test') do
+    describe user('alice') do
+      it { should exist }
+      it { should belong_to_primary_group 'alice' }
+      it { should have_uid 2000 }
+      it { should have_home_directory '/home/alice' }
+      it { should have_login_shell '/bin/bash' }
+    end
+
+    describe group('alice') do
       it { should exist }
       it { should have_gid 2000 }
-    end
-
-    describe user('test') do
-      it { should exist }
-      it { should belong_to_group 'test' }
-      it { should have_uid 2000 }
-      it { should have_home_directory '/home/test' }
-      it { should have_login_shell '/bin/bash' }
     end
   else
     it 'should not work' do

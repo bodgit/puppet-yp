@@ -37,7 +37,6 @@ describe 'yp::serv' do
       it { should contain_exec("awk '{ if ($1 != \"\" && $1 !~ \"#\") print $0\"\\t\"$0 }' /var/yp/ypservers | makedbm - /var/yp/example.com/ypservers") }
       it { should contain_file('/var/yp/ypservers') }
       it { should contain_file('/var/yp/example.com') }
-      it { should contain_service('yppasswdd') }
       it { should contain_service('ypserv') }
 
       case facts[:osfamily]
@@ -97,6 +96,7 @@ describe 'yp::serv' do
           it { should contain_exec("make -f ../Makefile #{k}") }
         end
         it { should contain_package('ypserv') }
+        it { should contain_service('yppasswdd') }
         it { should contain_service('ypxfrd') }
       else
       end

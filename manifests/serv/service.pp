@@ -8,20 +8,23 @@ class yp::serv::service {
     hasrestart => true,
   }
 
-  $yppasswdd_ensure = $::yp::serv::master ? {
-    undef   => running,
-    default => stopped,
-  }
-  $yppasswdd_enable = $::yp::serv::master ? {
-    undef   => true,
-    default => false,
-  }
+  if $::yp::serv::has_yppasswdd {
 
-  service { $::yp::serv::yppasswdd_service_name:
-    ensure     => $yppasswdd_ensure,
-    enable     => $yppasswdd_enable,
-    hasstatus  => true,
-    hasrestart => true,
+    $yppasswdd_ensure = $::yp::serv::master ? {
+      undef   => running,
+      default => stopped,
+    }
+    $yppasswdd_enable = $::yp::serv::master ? {
+      undef   => true,
+      default => false,
+    }
+
+    service { $::yp::serv::yppasswdd_service_name:
+      ensure     => $yppasswdd_ensure,
+      enable     => $yppasswdd_enable,
+      hasstatus  => true,
+      hasrestart => true,
+    }
   }
 
   if $::yp::serv::has_ypxfrd {

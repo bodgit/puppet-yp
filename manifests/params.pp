@@ -21,6 +21,7 @@ class yp::params {
         'netid.byname',
       ]
       $ldap_service_name           = 'ypldap'
+      $serv_has_yppasswdd          = false
       $serv_has_ypxfrd             = false
       $serv_manage_package         = false
       $serv_package_name           = undef
@@ -50,7 +51,7 @@ class yp::params {
         'mail.byaddr',
       ]
       $serv_map_extension          = '.db'
-      $serv_yppasswdd_service_name = 'yppasswdd'
+      $serv_yppasswdd_service_name = undef
       $serv_ypserv_service_name    = 'ypserv'
       $serv_ypxfrd_service_name    = undef
     }
@@ -61,6 +62,7 @@ class yp::params {
       $ldap_conf_file              = undef
       $ldap_maps                   = undef
       $ldap_service_name           = undef
+      $serv_has_yppasswdd          = true
       $serv_has_ypxfrd             = true
       $serv_manage_package         = true
       $serv_maps                   = [

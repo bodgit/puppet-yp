@@ -9,7 +9,7 @@ DIR=/etc
 AMDDIR=$(DIR)/amd
 
 # Set this to disable automatic distribution of YP maps.
-NOPUSH="<%= 'True' if @slaves %>"
+NOPUSH="<%= 'True' unless @slaves %>"
 
 # Unset this to exclude encrypted passwords from the passwd maps.
 UNSECURE="<%= 'True' if @merge_passwd %>"
