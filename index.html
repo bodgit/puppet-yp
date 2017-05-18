@@ -73,34 +73,19 @@ src="https://gemnasium.com/bodgit/puppet-yp.svg"></a></p>
 
 <h4 id="label-Table+of+Contents">Table of Contents</h4>
 <ol><li>
-<p><a href="#overview">Overview</a></p>
-</li><li>
-<p><a href="#module-description">Module Description - What the module does and
-why it is useful</a></p>
+<p><a href="#description">Description</a></p>
 </li><li>
 <p><a href="#setup">Setup - The basics of getting started with yp</a></p>
 <ul><li>
 <p><a href="#what-yp-affects">What yp affects</a></p>
+</li><li>
+<p><a href="#setup-requirements">Setup requirements</a></p>
 </li><li>
 <p><a href="#beginning-with-yp">Beginning with yp</a></p>
 </li></ul>
 </li><li>
 <p><a href="#usage">Usage - Configuration options and additional
 functionality</a></p>
-<ul><li>
-<p><a href="#classes-and-defined-types">Classes and Defined Types</a></p>
-<ul><li>
-<p><a href="#class-yp">Class: yp</a></p>
-</li><li>
-<p><a href="#class-ypbind">Class: yp::bind</a></p>
-</li><li>
-<p><a href="#class-ypldap">Class: yp::ldap</a></p>
-</li><li>
-<p><a href="#class-ypserv">Class: yp::serv</a></p>
-</li></ul>
-</li><li>
-<p><a href="#examples">Examples</a></p>
-</li></ul>
 </li><li>
 <p><a href="#reference">Reference - An under-the-hood peek at what the module
 is doing and how</a></p>
@@ -111,11 +96,9 @@ is doing and how</a></p>
 module</a></p>
 </li></ol>
 
-<h2 id="label-Overview">Overview</h2>
+<h2 id="label-Description">Description</h2>
 
 <p>This module manages YP/NIS.</p>
-
-<h2 id="label-Module+Description">Module Description</h2>
 
 <p>This module can configure the YP/NIS domain, manage the <code>ypbind</code>
 daemon to bind a client to a YP server and create and maintain master &amp;
@@ -126,291 +109,25 @@ to fetch YP maps from LDAP.</p>
 <h2 id="label-Setup">Setup</h2>
 
 <h3 id="label-What+yp+affects">What yp affects</h3>
-<ul><li>
-<p>The package(s) providing YP support.</p>
-</li><li>
-<p>Managing the necessary configuration to bind a client to a YP domain.</p>
-</li><li>
-<p>Updating the client to use the YP maps. Either:</p>
-</li><li>
-<p>Adding traditional <code>+::...</code> entries to the bottom of
-<code>/etc/passwd</code>, <code>/etc/group</code>.</p>
-</li><li>
-<p>Updating <code>/etc/nsswitch.conf</code> and PAM.</p>
-</li><li>
-<p>Managing the necessary configuration for building YP maps on a standalone 
-or master YP server.</p>
-</li><li>
-<p>On a slave YP server transferring YP maps from a master YP server.</p>
-</li><li>
-<p>The services controlling the <code>ypbind</code>, <code>ypserv</code> &amp;
-<code>ypldap</code> daemons.</p>
-</li></ul>
+
+<p>On OpenBSD this module will add the traditional <code>+::...</code> entries
+to the bottom of the <code>/etc/passwd</code> and <code>/etc/group</code>
+files.</p>
+
+<h3 id="label-Setup+Requirements">Setup Requirements</h3>
+
+<p>You will need to manage the RPC portmapper by using <a
+href="https://forge.puppet.com/bodgit/portmap">bodgit/portmap</a> or by
+other means.</p>
+
+<p>On Linux you will need to adjust the <code>/etc/nsswitch.conf</code> file
+and PAM configuration yourself. Both <a
+href="https://forge.puppet.com/trlinkin/nsswitch">trlinkin/nsswitch</a> and
+<a
+href="https://forge.puppet.com/herculesteam/augeasproviders_pam">herculesteam/augeasproviders_pam</a>
+are known to work and used in the examples and tests in this module.</p>
 
 <h3 id="label-Beginning+with+yp">Beginning with yp</h3>
-
-<pre class="code ruby"><code class="ruby">class { &#39;::yp&#39;:
-  domain =&gt; &#39;example.com&#39;,
-}</code></pre>
-
-<h2 id="label-Usage">Usage</h2>
-
-<h3 id="label-Classes+and+Defined+Types">Classes and Defined Types</h3>
-
-<h4 id="label-Class-3A+yp">Class: <code>yp</code></h4>
-
-<p><strong>Parameters within <code>yp</code>:</strong></p>
-
-<h5 id="label-domain"><code>domain</code></h5>
-
-<p>The YP/NIS domain.</p>
-
-<h5 id="label-yp_dir"><code>yp_dir</code></h5>
-
-<p>The base YP directory, usually <code>/var/yp</code>.</p>
-
-<h4 id="label-Class-3A+yp-3A-3Abind">Class: <code>yp::bind</code></h4>
-
-<p><strong>Parameters within <code>yp::bind</code>:</strong></p>
-
-<h5 id="label-domain"><code>domain</code></h5>
-
-<p>The YP/NIS domain.</p>
-
-<h5 id="label-servers"><code>servers</code></h5>
-
-<p>An array of YP servers to use, if left empty will default to broadcasting.</p>
-
-<h5 id="label-manage_package"><code>manage_package</code></h5>
-
-<p>Whether to manage a package or not. Some operating systems have
-<code>ypbind</code> as part of the base system.</p>
-
-<h5 id="label-package_name"><code>package_name</code></h5>
-
-<p>The name of the package to install that provides the <code>ypbind</code>
-daemon.</p>
-
-<h5 id="label-service_name"><code>service_name</code></h5>
-
-<p>The name of the service managing <code>ypbind</code>.</p>
-
-<h4 id="label-Class-3A+yp-3A-3Aldap">Class: <code>yp::ldap</code></h4>
-
-<p><strong>Parameters within <code>yp::ldap</code>:</strong></p>
-
-<h5 id="label-base_dn"><code>base_dn</code></h5>
-
-<p>The base DN from which to perform all LDAP queries.</p>
-
-<h5 id="label-domain"><code>domain</code></h5>
-
-<p>The YP/NIS domain for which to provide maps fetched from LDAP.</p>
-
-<h5 id="label-server"><code>server</code></h5>
-
-<p>The LDAP server to use.</p>
-
-<h5 id="label-bind_dn"><code>bind_dn</code></h5>
-
-<p>The Distinguiѕhed Name to use to bind to the LDAP server.</p>
-
-<h5 id="label-bind_pw"><code>bind_pw</code></h5>
-
-<p>The password to use when binding to the LDAP server.</p>
-
-<h5 id="label-conf_file"><code>conf_file</code></h5>
-
-<p>The location of the configuration file, usually
-<code>/etc/ypldap.conf</code>.</p>
-
-<h5 id="label-fixed_attributes"><code>fixed_attributes</code></h5>
-
-<p>A hash of YP map attributes that should not be looked up from LDAP, but
-hardcoded to a particular value. Keys should be one or more of
-<code>name</code>, <code>passwd</code>, <code>uid</code>, <code>gid</code>,
-<code>gecos</code>, <code>home</code>, <code>shell</code>,
-<code>change</code>, <code>expire</code>, <code>class</code>,
-<code>groupname</code>, <code>grouppasswd</code>, <code>groupgid</code>, or
-<code>groupmembers</code>. The defaults are:</p>
-
-<pre class="code ruby"><code class="ruby"><span class='lbrace'>{</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>passwd</span><span class='tstring_end'>&#39;</span></span>      <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>*</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>change</span><span class='tstring_end'>&#39;</span></span>      <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>expire</span><span class='tstring_end'>&#39;</span></span>      <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>class</span><span class='tstring_end'>&#39;</span></span>       <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ldap</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>grouppasswd</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>*</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-<span class='rbrace'>}</span>
-</code></pre>
-
-<p>This blanks out any passwords, disables any account or password expiry and
-places all users into the <code>ldap</code> login class.</p>
-
-<p>Values in this parameter will be used in preference to any provided by
-<code>ldap_attributes</code> or <code>list_attributes</code>.</p>
-
-<h5 id="label-group_dn"><code>group_dn</code></h5>
-
-<p>The base DN from which to perform group LDAP queries, if different from
-<code>base_dn</code>.</p>
-
-<h5 id="label-group_filter"><code>group_filter</code></h5>
-
-<p>The LDAP search filter to use when searching for groups, defaults to
-<code>(objectClass=posixGroup)</code>.</p>
-
-<h5 id="label-interval"><code>interval</code></h5>
-
-<p>How often to refresh the maps from LDAP, defaults to 60 seconds.</p>
-
-<h5 id="label-ldap_attributes"><code>ldap_attributes</code></h5>
-
-<p>A hash of YP map attributes that should be looked up from regular LDAP
-attributes. Keys should be one or more of <code>name</code>,
-<code>passwd</code>, <code>uid</code>, <code>gid</code>,
-<code>gecos</code>, <code>home</code>, <code>shell</code>,
-<code>change</code>, <code>expire</code>, <code>class</code>,
-<code>groupname</code>, <code>grouppasswd</code>, <code>groupgid</code>, or
-<code>groupmembers</code>. The defaults are:</p>
-
-<pre class="code ruby"><code class="ruby"><span class='lbrace'>{</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>name</span><span class='tstring_end'>&#39;</span></span>      <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>uid</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>uid</span><span class='tstring_end'>&#39;</span></span>       <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>uidNumber</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>gid</span><span class='tstring_end'>&#39;</span></span>       <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>gidNumber</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>gecos</span><span class='tstring_end'>&#39;</span></span>     <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cn</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>home</span><span class='tstring_end'>&#39;</span></span>      <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>homeDirectory</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>shell</span><span class='tstring_end'>&#39;</span></span>     <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>loginShell</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>groupname</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cn</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>groupgid</span><span class='tstring_end'>&#39;</span></span>  <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>gidNumber</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-<span class='rbrace'>}</span>
-</code></pre>
-
-<p>These map to the standard RFC 2307(bis) attributes.</p>
-
-<p>Values in this parameter have the lowest precedence compared to
-<code>fixed_attributes</code> and <code>list_attributes</code>.</p>
-
-<h5 id="label-list_attributes"><code>list_attributes</code></h5>
-
-<p>A hash of YP map attributes that should be looked up from regular LDAP
-attributes but in the case of multiple values should be joined together
-with commas. Keys should be one or more of <code>name</code>,
-<code>passwd</code>, <code>uid</code>, <code>gid</code>,
-<code>gecos</code>, <code>home</code>, <code>shell</code>,
-<code>change</code>, <code>expire</code>, <code>class</code>,
-<code>groupname</code>, <code>grouppasswd</code>, <code>groupgid</code>, or
-<code>groupmembers</code>. The defaults are:</p>
-
-<pre class="code ruby"><code class="ruby"><span class='lbrace'>{</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>groupmembers</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>memberUid</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-<span class='rbrace'>}</span>
-</code></pre>
-
-<p>This maps to the standard RFC 2307(bis) attributes.</p>
-
-<p>Values in this parameter take precedence over any defined in
-<code>ldap_attributes</code>.</p>
-
-<h5 id="label-maps"><code>maps</code></h5>
-
-<p>The list of YP maps to provide based on LDAP searches. The defaults are
-<code>passwd.byname</code>, <code>passwd.byuid</code>,
-<code>group.byname</code>, <code>group.bygid</code>, and
-<code>netid.byname</code>.</p>
-
-<h5 id="label-service_name"><code>service_name</code></h5>
-
-<p>The name of the service managing <code>ypldap</code>.</p>
-
-<h5 id="label-user_filter"><code>user_filter</code></h5>
-
-<p>The LDAP search filter to use when searching for users, defaults to
-<code>(objectClass=posixAccount)</code>.</p>
-
-<h4 id="label-Class-3A+yp-3A-3Aserv">Class: <code>yp::serv</code></h4>
-
-<p><strong>Parameters within <code>yp::serv</code>:</strong></p>
-
-<h5 id="label-domain"><code>domain</code></h5>
-
-<p>The YP/NIS domain.</p>
-
-<h5 id="label-has_ypxfrd"><code>has_ypxfrd</code></h5>
-
-<p>Does this platform provide a <code>ypxfrd</code> daemon to help map
-transfers.</p>
-
-<h5 id="label-manage_package"><code>manage_package</code></h5>
-
-<p>Whether to manage a package or not. Some operating systems have
-<code>ypserv</code> as part of the base system.</p>
-
-<h5 id="label-maps"><code>maps</code></h5>
-
-<p>The YP maps to build, <code>passwd.byname</code>, <code>group.bygid</code>,
-etc. The default is to try and build all supported maps which often
-includes some esoteric ones.</p>
-
-<h5 id="label-map_extension"><code>map_extension</code></h5>
-
-<p>The file extension added to compiled maps, often <code>.db</code>.</p>
-
-<h5 id="label-master"><code>master</code></h5>
-
-<p>If this is a slave YP server, the IP address of the master.</p>
-
-<h5 id="label-merge_group"><code>merge_group</code></h5>
-
-<p>Whether to merge group passwords into the group maps.</p>
-
-<h5 id="label-merge_passwd"><code>merge_passwd</code></h5>
-
-<p>Whether to merge user passwords into the passwd maps, on some platforms
-this allows a separate <code>shadow.byname</code> map to be created.</p>
-
-<h5 id="label-minimum_gid"><code>minimum_gid</code></h5>
-
-<p>Any GID lower than this will not be included in the group maps. Defaults to
-1000.</p>
-
-<h5 id="label-minimum_uid"><code>minimum_uid</code></h5>
-
-<p>Any UID lower than this will not be included in the passwd maps. Defaults
-to 1000.</p>
-
-<h5 id="label-package_name"><code>package_name</code></h5>
-
-<p>The name of the package to install that provides the <code>ypserv</code>
-daemon.</p>
-
-<h5 id="label-yppasswdd_service_name"><code>yppasswdd_service_name</code></h5>
-
-<p>The name of the service managing <code>yppasswdd</code>.</p>
-
-<h5 id="label-ypserv_service_name"><code>ypserv_service_name</code></h5>
-
-<p>The name of the service managing <code>ypserv</code>.</p>
-
-<h5 id="label-ypxfrd_service_name"><code>ypxfrd_service_name</code></h5>
-
-<p>The name of the service managing <code>ypxfrd</code>.</p>
-
-<h5 id="label-slaves"><code>slaves</code></h5>
-
-<p>If this is a master server, specify the slaves which will be notified when
-a map is updated.</p>
-
-<h5 id="label-yp_dir"><code>yp_dir</code></h5>
-
-<p>The base YP directory, usually <code>/var/yp</code>.</p>
-
-<h3 id="label-Examples">Examples</h3>
-
-<p>Set the YP domain:</p>
-
-<pre class="code ruby"><code class="ruby">class { &#39;::yp&#39;:
-  domain =&gt; &#39;example.com&#39;,
-}</code></pre>
 
 <p>Bind a client to a YP domain using three YP servers:</p>
 
@@ -425,7 +142,38 @@ class { &#39;::yp::bind&#39;:
   servers =&gt; [&#39;192.0.2.1&#39;, &#39;192.0.2.2&#39;, &#39;192.0.2.3&#39;],
 }
 
-Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::bind&#39;] &lt;~ Class[&#39;::yp&#39;]</code></pre>
+Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::bind&#39;] &lt;~ Class[&#39;::yp&#39;]
+
+if $::osfamily == &#39;RedHat&#39; {
+  class { &#39;::nsswitch&#39;:
+    passwd    =&gt; [&#39;files&#39;, &#39;nis&#39;, &#39;sss&#39;],
+    shadow    =&gt; [&#39;files&#39;, &#39;nis&#39;, &#39;sss&#39;],
+    group     =&gt; [&#39;files&#39;, &#39;nis&#39;, &#39;sss&#39;],
+    hosts     =&gt; [&#39;files&#39;, &#39;nis&#39;, &#39;dns&#39;],
+    netgroup  =&gt; [&#39;files&#39;, &#39;nis&#39;, &#39;sss&#39;],
+    automount =&gt; [&#39;files&#39;, &#39;nis&#39;],
+    require   =&gt; Class[&#39;::yp::bind&#39;],
+  }
+
+  pam { &#39;nis&#39;:
+    ensure    =&gt; present,
+    service   =&gt; &#39;system-auth-ac&#39;,
+    type      =&gt; &#39;password&#39;,
+    control   =&gt; &#39;sufficient&#39;,
+    module    =&gt; &#39;pam_unix.so&#39;,
+    arguments =&gt; [
+      &#39;md5&#39;,
+      &#39;shadow&#39;,
+      &#39;nis&#39;,
+      &#39;nullok&#39;,
+      &#39;try_first_pass&#39;,
+      &#39;use_authtok&#39;,
+    ],
+    require   =&gt; Class[&#39;::yp::bind&#39;],
+  }
+}</code></pre>
+
+<h2 id="label-Usage">Usage</h2>
 
 <p>Create a standalone YP server:</p>
 
@@ -458,7 +206,10 @@ class { &#39;::yp::serv&#39;:
     &#39;group.byname&#39;,
     &#39;netid.byname&#39;,
   ],
-  slaves =&gt; [&#39;192.0.2.2&#39;, &#39;192.0.2.3&#39;],
+  slaves =&gt; [
+    &#39;192.0.2.2&#39;,
+    &#39;192.0.2.3&#39;,
+  ],
 }
 
 Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::serv&#39;] &lt;- Class[&#39;::yp&#39;]</code></pre>
@@ -491,7 +242,7 @@ Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::serv&#39;] &lt;- Class[&#39;::
 Class[&#39;::yp::serv&#39;] -&gt; Class[&#39;::yp::bind&#39;] &lt;~ Class[&#39;::yp&#39;]</code></pre>
 
 <p>For OpenBSD only, set up <code>ypldap</code> to create YP maps from an LDAP
-server and also bind to it. This is the equivalent to PAM/LDAP:</p>
+server and also bind to it. This is the equivalent to PAM/LDAP on Linux:</p>
 
 <pre class="code ruby"><code class="ruby">include ::portmap
 
@@ -515,55 +266,10 @@ Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::ldap&#39;] ~&gt; Class[&#39;::
 
 <h2 id="label-Reference">Reference</h2>
 
-<h3 id="label-Classes">Classes</h3>
-
-<h4 id="label-Public+Classes">Public Classes</h4>
-<ul><li>
-<p><a href="#class-yp">yp</a>: Main class for configuring the YP/NIS domain.</p>
-</li><li>
-<p><a href="#class-ypbind">yp::bind</a>: Main class for installing and
-managing <code>ypbind</code> daemon.</p>
-</li><li>
-<p><a href="#class-ypldap">yp::ldap</a>: Main class for installing and
-managing <code>ypldap</code> daemon.</p>
-</li><li>
-<p><a href="#class-ypserv">yp::serv</a>: Main class for installing and
-managing <code>ypserv</code> daemon.</p>
-</li></ul>
-
-<h4 id="label-Private+Classes">Private Classes</h4>
-<ul><li>
-<p><code>yp::config</code>: Handles YP/NIS configuration.</p>
-</li><li>
-<p><code>yp::params</code>: Different configuration data for different
-systems.</p>
-</li><li>
-<p><code>yp::bind::config</code>: Handles <code>ypbind</code> configuration.</p>
-</li><li>
-<p><code>yp::bind::install</code>: Handles <code>ypbind</code> installation.</p>
-</li><li>
-<p><code>yp::bind::service</code>: Handles starting the <code>ypbind</code>
-daemon.</p>
-</li><li>
-<p><code>yp::ldap::config</code>: Handles <code>ypldap</code> configuration.</p>
-</li><li>
-<p><code>yp::ldap::service</code>: Handles starting the <code>ypldap</code>
-daemon.</p>
-</li><li>
-<p><code>yp::serv::config</code>: Handles <code>ypserv</code> configuration.</p>
-</li><li>
-<p><code>yp::serv::install</code>: Handles <code>ypserv</code> installation.</p>
-</li><li>
-<p><code>yp::serv::service</code>: Handles starting the <code>ypserv</code>
-daemon.</p>
-</li></ul>
-
-<h3 id="label-Defined+Types">Defined Types</h3>
-
-<h4 id="label-Private+Defined+Types">Private Defined Types</h4>
-<ul><li>
-<p><code>yp::serv::map</code>: Handles creating or transferring YP maps.</p>
-</li></ul>
+<p>The reference documentation is generated with <a
+href="https://github.com/puppetlabs/puppet-strings">puppet-strings</a> and
+the latest version of the documentation is hosted at <a
+href="https://bodgit.github.io/puppet-yp/">bodgit.github.io/puppet-yp/</a>.</p>
 
 <h2 id="label-Limitations">Limitations</h2>
 
@@ -573,25 +279,30 @@ bar <code>ypserv</code> so I added that and made sure it was portable
 enough to work on one other OS. It works however I don&#39;t expect many
 people to still be using traditional YP/NIS.</p>
 
-<p>This module has been built on and tested against Puppet 3.0 and higher.</p>
+<p>This module has been built on and tested against Puppet 4.4.0 and higher.</p>
 
 <p>The module has been tested on:</p>
 <ul><li>
-<p>OpenBSD 5.7/5.8/5.9</p>
+<p>RedHat Enterprise Linux 6/7</p>
 </li><li>
-<p>RedHat/CentOS Enterprise Linux 7</p>
+<p>OpenBSD 6.0/6.1</p>
 </li></ul>
 
-<p>Testing on other platforms has been light and cannot be guaranteed.</p>
-
 <h2 id="label-Development">Development</h2>
+
+<p>The module has both <a href="http://rspec-puppet.com">rspec-puppet</a> and
+<a href="https://github.com/puppetlabs/beaker-rspec">beaker-rspec</a>
+tests. Run them with:</p>
+
+<pre class="code ruby"><code class="ruby">$ bundle exec rake test
+$ PUPPET_INSTALL_TYPE=agent PUPPET_INSTALL_VERSION=x.y.z bundle exec rake beaker:&lt;nodeset&gt;</code></pre>
 
 <p>Please log issues or pull requests at <a
 href="https://github.com/bodgit/puppet-yp">github</a>.</p>
 </div></div>
 
       <div id="footer">
-  Generated on Thu May 11 23:36:49 2017 by
+  Generated on Thu May 18 23:22:59 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.8 (ruby-2.2.5).
 </div>

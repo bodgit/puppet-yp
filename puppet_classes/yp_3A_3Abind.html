@@ -109,7 +109,36 @@ class { &#39;::yp::bind&#39;:
   ],
 }
 
-Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::bind&#39;] &lt;~ Class[&#39;::yp&#39;]</code></pre>
+Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::bind&#39;] &lt;~ Class[&#39;::yp&#39;]
+
+if $::osfamily == &#39;RedHat&#39; {
+  class { &#39;::nsswitch&#39;:
+    passwd    =&gt; [&#39;files&#39;, &#39;nis&#39;, &#39;sss&#39;],
+    shadow    =&gt; [&#39;files&#39;, &#39;nis&#39;, &#39;sss&#39;],
+    group     =&gt; [&#39;files&#39;, &#39;nis&#39;, &#39;sss&#39;],
+    hosts     =&gt; [&#39;files&#39;, &#39;nis&#39;, &#39;dns&#39;],
+    netgroup  =&gt; [&#39;files&#39;, &#39;nis&#39;, &#39;sss&#39;],
+    automount =&gt; [&#39;files&#39;, &#39;nis&#39;],
+    require   =&gt; Class[&#39;::yp::bind&#39;],
+  }
+
+  pam { &#39;nis&#39;:
+    ensure    =&gt; present,
+    service   =&gt; &#39;system-auth-ac&#39;,
+    type      =&gt; &#39;password&#39;,
+    control   =&gt; &#39;sufficient&#39;,
+    module    =&gt; &#39;pam_unix.so&#39;,
+    arguments =&gt; [
+      &#39;md5&#39;,
+      &#39;shadow&#39;,
+      &#39;nis&#39;,
+      &#39;nullok&#39;,
+      &#39;try_first_pass&#39;,
+      &#39;use_authtok&#39;,
+    ],
+    require   =&gt; Class[&#39;::yp::bind&#39;],
+  }
+}</code></pre>
     
   </div>
 <p class="tag_title">Parameters:</p>
@@ -226,24 +255,24 @@ broadcasting.</p>
         <pre class="lines">
 
 
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46</pre>
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/bind.pp', line 32</span>
+        <pre class="code"><span class="info file"># File 'manifests/bind.pp', line 61</span>
 
 class yp::bind (
   Bodgitlib::Domain                         $domain,
@@ -267,7 +296,7 @@ class yp::bind (
 </div>
 
       <div id="footer">
-  Generated on Thu May 11 23:36:51 2017 by
+  Generated on Thu May 18 23:23:00 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.8 (ruby-2.2.5).
 </div>

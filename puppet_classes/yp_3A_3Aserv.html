@@ -169,6 +169,25 @@ Class[&#39;::yp::serv&#39;] ~&gt; Class[&#39;::yp::bind&#39;] &lt;- Class[&#39;:
   
     <li>
       
+        <span class='name'>has_yppasswdd</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>$::yp::params::serv_has_yppasswdd</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Does this platform provide <code>yppasswdd</code> daemon for changing
+passwords.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>has_ypxfrd</span>
       
       
@@ -357,7 +376,7 @@ daemon.</p>
         <span class='name'>yppasswdd_service_name</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>$::yp::params::serv_yppasswdd_service_name</tt>)</em>
@@ -464,8 +483,6 @@ when a map is updated.</p>
         <pre class="lines">
 
 
-81
-82
 83
 84
 85
@@ -493,13 +510,17 @@ when a map is updated.</p>
 107
 108
 109
-110</pre>
+110
+111
+112
+113</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/serv.pp', line 81</span>
+        <pre class="code"><span class="info file"># File 'manifests/serv.pp', line 83</span>
 
 class yp::serv (
   Bodgitlib::Domain                         $domain,
+  Boolean                                   $has_yppasswdd          = $::yp::params::serv_has_yppasswdd,
   Boolean                                   $has_ypxfrd             = $::yp::params::serv_has_ypxfrd,
   Boolean                                   $manage_package         = $::yp::params::serv_manage_package,
   Array[String, 1]                          $maps                   = $::yp::params::serv_maps,
@@ -510,7 +531,7 @@ class yp::serv (
   Integer[0]                                $minimum_gid            = $::yp::params::serv_minimum_gid,
   Integer[0]                                $minimum_uid            = $::yp::params::serv_minimum_uid,
   Optional[String]                          $package_name           = $::yp::params::serv_package_name,
-  String                                    $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
+  Optional[String]                          $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
   String                                    $ypserv_service_name    = $::yp::params::serv_ypserv_service_name,
   Optional[String]                          $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,
   Optional[Array[IP::Address::NoSubnet, 1]] $slaves                 = undef,
@@ -535,7 +556,7 @@ class yp::serv (
 </div>
 
       <div id="footer">
-  Generated on Thu May 11 23:36:51 2017 by
+  Generated on Thu May 18 23:23:00 2017 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.8 (ruby-2.2.5).
 </div>
