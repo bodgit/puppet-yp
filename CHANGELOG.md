@@ -1,5 +1,12 @@
 # Change Log
 
+## [v2.0.1](https://github.com/bodgit/puppet-yp/tree/v2.0.1) (2017-11-04)
+[Full Changelog](https://github.com/bodgit/puppet-yp/compare/v2.0.0...v2.0.1)
+
+**Implemented enhancements:**
+
+- Fix module and Puppet dependencies [\#7](https://github.com/bodgit/puppet-yp/issues/7)
+
 ## [v2.0.0](https://github.com/bodgit/puppet-yp/tree/v2.0.0) (2017-05-18)
 [Full Changelog](https://github.com/bodgit/puppet-yp/compare/v1.0.0...v2.0.0)
 
