@@ -81,7 +81,7 @@
 # @see puppet_classes::yp::bind ::yp::bind
 # @see puppet_classes::yp::ldap ::yp::ldap
 class yp::serv (
-  Bodgitlib::Domain                         $domain,
+  String                                    $domain,
   Boolean                                   $has_yppasswdd          = $::yp::params::serv_has_yppasswdd,
   Boolean                                   $has_ypxfrd             = $::yp::params::serv_has_ypxfrd,
   Boolean                                   $manage_package         = $::yp::params::serv_manage_package,

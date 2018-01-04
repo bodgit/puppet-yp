@@ -12,7 +12,7 @@
 # @see puppet_classes::yp::serv ::yp::serv
 # @see puppet_classes::yp::ldap ::yp::ldap
 class yp (
-  Bodgitlib::Domain    $domain,
+  String               $domain,
   Stdlib::Absolutepath $yp_dir = $::yp::params::yp_dir,
 ) inherits ::yp::params {
 

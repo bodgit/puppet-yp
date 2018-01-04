@@ -59,7 +59,7 @@
 # @see puppet_classes::yp::serv ::yp::serv
 # @see puppet_classes::yp::ldap ::yp::ldap
 class yp::bind (
-  Bodgitlib::Domain                         $domain,
+  String                                    $domain,
   Optional[Array[IP::Address::NoSubnet, 1]] $servers        = undef,
   Boolean                                   $manage_package = $::yp::params::bind_manage_package,
   Optional[String]                          $package_name   = $::yp::params::bind_package_name,

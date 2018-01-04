@@ -49,7 +49,7 @@
 # @see puppet_classes::yp::serv ::yp::serv
 class yp::ldap (
   Bodgitlib::LDAP::DN               $base_dn,
-  Bodgitlib::Domain                 $domain,
+  String                            $domain,
   Bodgitlib::Host                   $server,
   Optional[Bodgitlib::LDAP::DN]     $bind_dn          = undef,
   Optional[String]                  $bind_pw          = undef,

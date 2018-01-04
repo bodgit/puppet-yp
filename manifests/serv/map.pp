@@ -1,6 +1,6 @@
 # @!visibility private
 define yp::serv::map (
-  Bodgitlib::Domain               $domain,
+  String                          $domain,
   Optional[String]                $extension,
   Optional[IP::Address::NoSubnet] $master,
   Stdlib::Absolutepath            $yp_dir,
