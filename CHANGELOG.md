@@ -1,5 +1,12 @@
 # Change Log
 
+## [v2.0.2](https://github.com/bodgit/puppet-yp/tree/v2.0.2) (2018-01-04)
+[Full Changelog](https://github.com/bodgit/puppet-yp/compare/v2.0.1...v2.0.2)
+
+**Fixed bugs:**
+
+- NIS domain should NOT require '.' [\#8](https://github.com/bodgit/puppet-yp/issues/8)
+
 ## [v2.0.1](https://github.com/bodgit/puppet-yp/tree/v2.0.1) (2017-11-04)
 [Full Changelog](https://github.com/bodgit/puppet-yp/compare/v2.0.0...v2.0.1)
 
