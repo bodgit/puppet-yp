@@ -141,7 +141,7 @@ Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::ldap&#39;] ~&gt; Class[&#39;::
         <span class='name'>domain</span>
       
       
-        <span class='type'>(<tt>Bodgitlib::Domain</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
@@ -481,7 +481,7 @@ with <code>,</code>.</p>
 
 class yp::ldap (
   Bodgitlib::LDAP::DN               $base_dn,
-  Bodgitlib::Domain                 $domain,
+  String                            $domain,
   Bodgitlib::Host                   $server,
   Optional[Bodgitlib::LDAP::DN]     $bind_dn          = undef,
   Optional[String]                  $bind_pw          = undef,
@@ -534,7 +534,7 @@ class yp::ldap (
 </div>
 
       <div id="footer">
-  Generated on Thu May 18 23:23:00 2017 by
+  Generated on Thu Jan  4 21:11:38 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.8 (ruby-2.2.5).
 </div>

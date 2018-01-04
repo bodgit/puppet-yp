@@ -107,7 +107,7 @@
         <span class='name'>domain</span>
       
       
-        <span class='type'>(<tt>Bodgitlib::Domain</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
@@ -169,7 +169,7 @@
         <pre class="code"><span class="info file"># File 'manifests/init.pp', line 14</span>
 
 class yp (
-  Bodgitlib::Domain    $domain,
+  String               $domain,
   Stdlib::Absolutepath $yp_dir = $::yp::params::yp_dir,
 ) inherits ::yp::params {
 
@@ -182,7 +182,7 @@ class yp (
 </div>
 
       <div id="footer">
-  Generated on Thu May 18 23:23:00 2017 by
+  Generated on Thu Jan  4 21:11:38 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.8 (ruby-2.2.5).
 </div>

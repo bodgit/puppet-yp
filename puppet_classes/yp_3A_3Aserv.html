@@ -156,7 +156,7 @@ Class[&#39;::yp::serv&#39;] ~&gt; Class[&#39;::yp::bind&#39;] &lt;- Class[&#39;:
         <span class='name'>domain</span>
       
       
-        <span class='type'>(<tt>Bodgitlib::Domain</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
@@ -519,7 +519,7 @@ when a map is updated.</p>
         <pre class="code"><span class="info file"># File 'manifests/serv.pp', line 83</span>
 
 class yp::serv (
-  Bodgitlib::Domain                         $domain,
+  String                                    $domain,
   Boolean                                   $has_yppasswdd          = $::yp::params::serv_has_yppasswdd,
   Boolean                                   $has_ypxfrd             = $::yp::params::serv_has_ypxfrd,
   Boolean                                   $manage_package         = $::yp::params::serv_manage_package,
@@ -556,7 +556,7 @@ class yp::serv (
 </div>
 
       <div id="footer">
-  Generated on Thu May 18 23:23:00 2017 by
+  Generated on Thu Jan  4 21:11:38 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.8 (ruby-2.2.5).
 </div>

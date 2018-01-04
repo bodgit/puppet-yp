@@ -149,7 +149,7 @@ if $::osfamily == &#39;RedHat&#39; {
         <span class='name'>domain</span>
       
       
-        <span class='type'>(<tt>Bodgitlib::Domain</tt>)</span>
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
@@ -275,7 +275,7 @@ broadcasting.</p>
         <pre class="code"><span class="info file"># File 'manifests/bind.pp', line 61</span>
 
 class yp::bind (
-  Bodgitlib::Domain                         $domain,
+  String                                    $domain,
   Optional[Array[IP::Address::NoSubnet, 1]] $servers        = undef,
   Boolean                                   $manage_package = $::yp::params::bind_manage_package,
   Optional[String]                          $package_name   = $::yp::params::bind_package_name,
@@ -296,7 +296,7 @@ class yp::bind (
 </div>
 
       <div id="footer">
-  Generated on Thu May 18 23:23:00 2017 by
+  Generated on Thu Jan  4 21:11:38 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.8 (ruby-2.2.5).
 </div>
