@@ -176,11 +176,14 @@ also bind to it. This is the equivalent to PAM/LDAP on Linux:
 include ::portmap
 
 class { '::yp::ldap':
-  base_dn => 'dc=example,dc=com',
-  bind_dn => 'cn=ypldap,dc=example,dc=com',
-  bind_pw => 'password',
-  domain  => 'example.com',
-  server  => '192.0.2.1',
+  domain      => 'example.com',
+  directories => {
+    'dc=example,dc=com' => {
+      bind_dn => 'cn=ypldap,dc=example,dc=com',
+      bind_pw => 'password',
+      server  => '192.0.2.1',
+    },
+  },
 }
 
 class { '::yp':
