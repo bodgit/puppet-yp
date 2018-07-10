@@ -1,5 +1,17 @@
 # Change Log
 
+## [v3.0.0](https://github.com/bodgit/puppet-yp/tree/v3.0.0) (2018-07-10)
+[Full Changelog](https://github.com/bodgit/puppet-yp/compare/v2.0.2...v3.0.0)
+
+**Implemented enhancements:**
+
+- Test on OpenBSD 6.2 & 6.3 [\#11](https://github.com/bodgit/puppet-yp/issues/11)
+- Add support for SSL/TLS in ypldap [\#9](https://github.com/bodgit/puppet-yp/issues/9)
+
+**Fixed bugs:**
+
+- Cannot specify more than one LDAP directory [\#10](https://github.com/bodgit/puppet-yp/issues/10)
+
 ## [v2.0.2](https://github.com/bodgit/puppet-yp/tree/v2.0.2) (2018-01-04)
 [Full Changelog](https://github.com/bodgit/puppet-yp/compare/v2.0.1...v2.0.2)
 
