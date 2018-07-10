@@ -247,11 +247,14 @@ server and also bind to it. This is the equivalent to PAM/LDAP on Linux:</p>
 <pre class="code ruby"><code class="ruby">include ::portmap
 
 class { &#39;::yp::ldap&#39;:
-  base_dn =&gt; &#39;dc=example,dc=com&#39;,
-  bind_dn =&gt; &#39;cn=ypldap,dc=example,dc=com&#39;,
-  bind_pw =&gt; &#39;password&#39;,
-  domain  =&gt; &#39;example.com&#39;,
-  server  =&gt; &#39;192.0.2.1&#39;,
+  domain      =&gt; &#39;example.com&#39;,
+  directories =&gt; {
+    &#39;dc=example,dc=com&#39; =&gt; {
+      bind_dn =&gt; &#39;cn=ypldap,dc=example,dc=com&#39;,
+      bind_pw =&gt; &#39;password&#39;,
+      server  =&gt; &#39;192.0.2.1&#39;,
+    },
+  },
 }
 
 class { &#39;::yp&#39;:
@@ -302,7 +305,7 @@ href="https://github.com/bodgit/puppet-yp">github</a>.</p>
 </div></div>
 
       <div id="footer">
-  Generated on Tue Jul 10 23:04:11 2018 by
+  Generated on Tue Jul 10 23:10:36 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.8 (ruby-2.4.3).
 </div>
