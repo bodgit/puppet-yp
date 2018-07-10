@@ -1,0 +1,9 @@
+
+domain		"<%= @domain %>"
+interval	<%= @interval %>
+<% @maps.each do |m| -%>
+provide map	"<%= m %>"
+<% end -%>
+<% if @tls_cacert_file -%>
+cafile		"<%= @tls_cacert_file %>"
+<% end -%>

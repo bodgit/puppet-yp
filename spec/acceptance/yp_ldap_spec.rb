@@ -65,13 +65,16 @@ describe 'yp::ldap' do
     include ::portmap
 
     class { '::yp::ldap':
-      base_dn  => 'dc=example,dc=com',
-      bind_dn  => 'cn=ypldap,dc=example,dc=com',
-      bind_pw  => 'password',
-      domain   => 'example.com',
-      interval => 1,
-      server   => '127.0.0.1',
-      require  => Class['::openldap::server'],
+      domain      => 'example.com',
+      interval    => 1,
+      directories => {
+        'dc=example,dc=com' => {
+          bind_dn => 'cn=ypldap,dc=example,dc=com',
+          bind_pw => 'password',
+          server  => '127.0.0.1',
+        },
+      },
+      require     => Class['::openldap::server'],
     }
 
     class { '::yp':

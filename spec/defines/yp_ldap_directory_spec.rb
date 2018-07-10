@@ -1,26 +1,19 @@
 require 'spec_helper'
 
-describe 'yp::ldap' do
+describe 'yp::ldap::directory' do
+
+  let(:pre_condition) do
+    'class { "::yp::ldap": domain => "example.com" }'
+  end
+
+  let(:title) do
+    'dc=example,dc=com'
+  end
 
   let(:params) do
     {
-      :domain      => 'example.com',
-      :directories => {
-        'dc=example,dc=com' => {
-          'server'  => '127.0.0.1'
-        },
-      },
+      'server' => '127.0.0.1',
     }
-  end
-
-  context 'on unsupported distributions' do
-    let(:facts) do
-      {
-        :osfamily => 'Unsupported'
-      }
-    end
-
-    it { expect { should compile }.to raise_error(/not supported on Unsupported/) }
   end
 
   on_supported_os.each do |os, facts|
@@ -29,24 +22,11 @@ describe 'yp::ldap' do
 
     context "on #{os}", :compile do
       let(:facts) do
-        facts
+        facts.merge({
+          :concat_basedir => '/tmp',
+        })
       end
 
-      it { should contain_class('yp::ldap') }
-      it { should contain_class('yp::ldap::config') }
-      it { should contain_class('yp::ldap::service') }
-      it { should contain_class('yp::params') }
-      it { should contain_concat('/etc/ypldap.conf') }
-      it { should contain_concat__fragment('/etc/ypldap.conf global').with_content(<<-EOS.gsub(/^ {8}/, '')) }
-
-        domain		"example.com"
-        interval	60
-        provide map	"passwd.byname"
-        provide map	"passwd.byuid"
-        provide map	"group.byname"
-        provide map	"group.bygid"
-        provide map	"netid.byname"
-        EOS
       it { should contain_concat__fragment('/etc/ypldap.conf dc=example,dc=com').with_content(<<-EOS.gsub(/^ {8}/, '')) }
 
         directory "127.0.0.1" {
@@ -73,7 +53,6 @@ describe 'yp::ldap' do
         	list groupmembers maps to "memberUid"
         }
         EOS
-      it { should contain_service('ypldap') }
       it { should contain_yp__ldap__directory('dc=example,dc=com') }
     end
   end

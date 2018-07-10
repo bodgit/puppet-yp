@@ -1,12 +1,5 @@
-# !!! Managed by Puppet !!!
 
-domain		"<%= @domain %>"
-interval	<%= @interval %>
-<% @maps.each do |m| -%>
-provide map	"<%= m %>"
-<% end -%>
-
-directory "<%= @server %>" {
+directory "<%= @server %>"<% if @port %> port <%= @port %><% end %><% if @mode %> <%= @mode %><% end %> {
 <% if @bind_dn -%>
 	binddn "<%= @bind_dn %>"
 <%   if @bind_pw -%>

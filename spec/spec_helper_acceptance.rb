@@ -24,6 +24,7 @@ RSpec.configure do |c|
       on host, puppet('module', 'install', 'trlinkin-nsswitch'),                { :acceptable_exit_codes => [0,1] }
       on host, puppet('module', 'install', 'herculesteam-augeasproviders_pam'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module', 'install', 'bodgit-openldap'),                  { :acceptable_exit_codes => [0,1] }
+      on host, puppet('module', 'install', 'puppetlabs-concat'),                { :acceptable_exit_codes => [0,1] }
       scp_to(host, File.join(proj_root, 'spec/fixtures/files/example.ldif'), '/root/example.ldif')
     end
   end

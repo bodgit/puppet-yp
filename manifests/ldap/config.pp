@@ -1,25 +1,28 @@
 # @!visibility private
 class yp::ldap::config {
 
-  $base_dn          = $::yp::ldap::base_dn
-  $bind_dn          = $::yp::ldap::bind_dn
-  $bind_pw          = $::yp::ldap::bind_pw
-  $domain           = $::yp::ldap::domain
-  $fixed_attributes = $::yp::ldap::fixed_attributes
-  $group_dn         = $::yp::ldap::group_dn
-  $group_filter     = $::yp::ldap::group_filter
-  $interval         = $::yp::ldap::interval
-  $ldap_attributes  = $::yp::ldap::ldap_attributes
-  $list_attributes  = $::yp::ldap::list_attributes
-  $maps             = $::yp::ldap::maps
-  $server           = $::yp::ldap::server
-  $user_filter      = $::yp::ldap::user_filter
+  $domain          = $::yp::ldap::domain
+  $interval        = $::yp::ldap::interval
+  $maps            = $::yp::ldap::maps
+  $tls_cacert_file = $::yp::ldap::tls_cacert_file
 
-  file { $::yp::ldap::conf_file:
-    ensure  => file,
-    owner   => 0,
-    group   => 0,
-    mode    => '0640',
-    content => template("${module_name}/ypldap.conf.erb"),
+  ::concat { $::yp::ldap::conf_file:
+    owner        => 0,
+    group        => 0,
+    mode         => '0640',
+    warn         => "# !!! Managed by Puppet !!!\n",
+    validate_cmd => '/usr/sbin/ypldap -n -f %',
+  }
+
+  ::concat::fragment { "${::yp::ldap::conf_file} global":
+    order   => '01',
+    content => template("${module_name}/ypldap.conf.global.erb"),
+    target  => $::yp::ldap::conf_file,
+  }
+
+  $::yp::ldap::directories.each |$resource, $attributes| {
+    ::yp::ldap::directory { $resource:
+      * => $attributes,
+    }
   }
 }
