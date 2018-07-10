@@ -99,11 +99,14 @@
       <pre class="example code"><code>include ::portmap
 
 class { &#39;::yp::ldap&#39;:
-  base_dn =&gt; &#39;dc=example,dc=com&#39;,
-  bind_dn =&gt; &#39;cn=ypldap,dc=example,dc=com&#39;,
-  bind_pw =&gt; &#39;secret&#39;,
-  domain  =&gt; &#39;example.com&#39;,
-  server  =&gt; &#39;192.0.2.1&#39;,
+  domain      =&gt; &#39;example.com&#39;,
+  directories =&gt; {
+    &#39;dc=example,dc=com&#39; =&gt; {
+      &#39;server&#39;  =&gt; &#39;192.0.2.1&#39;,
+      &#39;bind_dn&#39; =&gt; &#39;cn=ypldap,dc=example,dc=com&#39;,
+      &#39;bind_pw&#39; =&gt; &#39;secret&#39;,
+    },
+  },
 }
 
 class { &#39;::yp&#39;:
@@ -122,22 +125,6 @@ Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::ldap&#39;] ~&gt; Class[&#39;::
   
     <li>
       
-        <span class='name'>base_dn</span>
-      
-      
-        <span class='type'>(<tt>Bodgitlib::LDAP::DN</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The base DN from which to perform all LDAP queries.</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
         <span class='name'>domain</span>
       
       
@@ -148,58 +135,6 @@ Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::ldap&#39;] ~&gt; Class[&#39;::
         &mdash;
         <div class='inline'>
 <p>The YP/NIS domain for which to provide maps fetched from LDAP.</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>server</span>
-      
-      
-        <span class='type'>(<tt>Bodgitlib::Host</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The LDAP server to use.</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>bind_dn</span>
-      
-      
-        <span class='type'>(<tt>Optional[Bodgitlib::LDAP::DN]</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>undef</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The DN to use to bind to the LDAP server.</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>bind_pw</span>
-      
-      
-        <span class='type'>(<tt>Optional[String]</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>undef</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The password to use when binding to the LDAP server.</p>
 </div>
       
     </li>
@@ -224,63 +159,14 @@ Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::ldap&#39;] ~&gt; Class[&#39;::
   
     <li>
       
-        <span class='name'>fixed_attributes</span>
+        <span class='name'>directories</span>
       
       
-        <span class='type'>(<tt>Hash[YP::LDAP::Attribute, String]</tt>)</span>
+        <span class='type'>(<tt>Hash[String, Hash[String, Any]]</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>{
-    &#39;passwd&#39;      =&gt; &#39;*&#39;,
-    &#39;change&#39;      =&gt; &#39;0&#39;,
-    &#39;expire&#39;      =&gt; &#39;0&#39;,
-    &#39;class&#39;       =&gt; &#39;ldap&#39;,
-    &#39;grouppasswd&#39; =&gt; &#39;*&#39;,
-  }</tt>)</em>
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
       
-      
-        &mdash;
-        <div class='inline'>
-<p>A hash of YP map attributes that should not be looked up from LDAP, but
-hardcoded to a particular value.</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>group_dn</span>
-      
-      
-        <span class='type'>(<tt>Optional[Bodgitlib::LDAP::DN]</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>undef</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The base DN from which to perform group queries, if different from
-<code>base_dn</code>.</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>group_filter</span>
-      
-      
-        <span class='type'>(<tt>Bodgitlib::LDAP::Filter</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>&#39;(objectClass=posixGroup)&#39;</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>The LDAP search filter to use when searching for groups.</p>
-</div>
       
     </li>
   
@@ -298,56 +184,6 @@ hardcoded to a particular value.</p>
         &mdash;
         <div class='inline'>
 <p>How often to refresh the maps from LDAP.</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>ldap_attributes</span>
-      
-      
-        <span class='type'>(<tt>Hash[YP::LDAP::Attribute, String]</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>{
-    &#39;name&#39;      =&gt; &#39;uid&#39;,
-    &#39;uid&#39;       =&gt; &#39;uidNumber&#39;,
-    &#39;gid&#39;       =&gt; &#39;gidNumber&#39;,
-    &#39;gecos&#39;     =&gt; &#39;cn&#39;,
-    &#39;home&#39;      =&gt; &#39;homeDirectory&#39;,
-    &#39;shell&#39;     =&gt; &#39;loginShell&#39;,
-    &#39;groupname&#39; =&gt; &#39;cn&#39;,
-    &#39;groupgid&#39;  =&gt; &#39;gidNumber&#39;,
-  }</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>A hash of YP map attributes that should be looked up from regular LDAP
-attributes.</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>list_attributes</span>
-      
-      
-        <span class='type'>(<tt>Hash[YP::LDAP::Attribute, String]</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>{
-    &#39;groupmembers&#39; =&gt; &#39;memberUid&#39;,
-  }</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>A hash of YP map attributes that should be looked up from regular LDAP
-attributes but in the case of multiple values should be joined together
-with <code>,</code>.</p>
 </div>
       
     </li>
@@ -390,19 +226,14 @@ with <code>,</code>.</p>
   
     <li>
       
-        <span class='name'>user_filter</span>
+        <span class='name'>tls_cacert_file</span>
       
       
-        <span class='type'>(<tt>Bodgitlib::LDAP::Filter</tt>)</span>
+        <span class='type'>(<tt>Optional[Stdlib::Absolutepath]</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>&#39;(objectClass=posixAccount)&#39;</tt>)</em>
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
       
-      
-        &mdash;
-        <div class='inline'>
-<p>The LDAP search filter to use when searching for users.</p>
-</div>
       
     </li>
   
@@ -418,6 +249,8 @@ with <code>,</code>.</p>
     
       <li><span class='object_link'><a href="yp_3A_3Aserv.html" title="puppet_classes::yp::serv (puppet_class)">::yp::serv</a></span></li>
     
+      <li><span class='object_link'><a href="../puppet_defined_types/yp_3A_3Aldap_3A_3Adirectory.html" title="puppet_defined_types::yp::ldap::directory (puppet_defined_type)">::yp::ldap::directory</a></span></li>
+    
   </ul>
 
 </div><div class="method_details_list">
@@ -427,6 +260,15 @@ with <code>,</code>.</p>
         <pre class="lines">
 
 
+41
+42
+43
+44
+45
+46
+47
+48
+49
 50
 51
 52
@@ -440,78 +282,19 @@ with <code>,</code>.</p>
 60
 61
 62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97</pre>
+63</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/ldap.pp', line 50</span>
+        <pre class="code"><span class="info file"># File 'manifests/ldap.pp', line 41</span>
 
 class yp::ldap (
-  Bodgitlib::LDAP::DN               $base_dn,
-  String                            $domain,
-  Bodgitlib::Host                   $server,
-  Optional[Bodgitlib::LDAP::DN]     $bind_dn          = undef,
-  Optional[String]                  $bind_pw          = undef,
-  Stdlib::Absolutepath              $conf_file        = $::yp::params::ldap_conf_file,
-  Hash[YP::LDAP::Attribute, String] $fixed_attributes = {
-    &#39;passwd&#39;      =&gt; &#39;*&#39;,
-    &#39;change&#39;      =&gt; &#39;0&#39;,
-    &#39;expire&#39;      =&gt; &#39;0&#39;,
-    &#39;class&#39;       =&gt; &#39;ldap&#39;,
-    &#39;grouppasswd&#39; =&gt; &#39;*&#39;,
-  },
-  Optional[Bodgitlib::LDAP::DN]     $group_dn         = undef,
-  Bodgitlib::LDAP::Filter           $group_filter     = &#39;(objectClass=posixGroup)&#39;,
-  Integer[1]                        $interval         = 60,
-  Hash[YP::LDAP::Attribute, String] $ldap_attributes  = {
-    &#39;name&#39;      =&gt; &#39;uid&#39;,
-    &#39;uid&#39;       =&gt; &#39;uidNumber&#39;,
-    &#39;gid&#39;       =&gt; &#39;gidNumber&#39;,
-    &#39;gecos&#39;     =&gt; &#39;cn&#39;,
-    &#39;home&#39;      =&gt; &#39;homeDirectory&#39;,
-    &#39;shell&#39;     =&gt; &#39;loginShell&#39;,
-    &#39;groupname&#39; =&gt; &#39;cn&#39;,
-    &#39;groupgid&#39;  =&gt; &#39;gidNumber&#39;,
-  },
-  Hash[YP::LDAP::Attribute, String] $list_attributes  = {
-    &#39;groupmembers&#39; =&gt; &#39;memberUid&#39;,
-  },
-  Array[String, 1]                  $maps             = $::yp::params::ldap_maps,
-  String                            $service_name     = $::yp::params::ldap_service_name,
-  Bodgitlib::LDAP::Filter           $user_filter      = &#39;(objectClass=posixAccount)&#39;,
+  String                          $domain,
+  Hash[String, Hash[String, Any]] $directories     = {},
+  Stdlib::Absolutepath            $conf_file       = $::yp::params::ldap_conf_file,
+  Integer[1]                      $interval        = 60,
+  Array[String, 1]                $maps            = $::yp::params::ldap_maps,
+  String                          $service_name    = $::yp::params::ldap_service_name,
+  Optional[Stdlib::Absolutepath]  $tls_cacert_file = undef,
 ) inherits ::yp::params {
 
   if $::osfamily != &#39;OpenBSD&#39; {
@@ -534,9 +317,9 @@ class yp::ldap (
 </div>
 
       <div id="footer">
-  Generated on Thu Jan  4 21:11:38 2018 by
+  Generated on Tue Jul 10 23:04:12 2018 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.8 (ruby-2.2.5).
+  0.9.8 (ruby-2.4.3).
 </div>
 
     </div>
