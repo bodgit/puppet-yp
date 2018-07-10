@@ -216,7 +216,7 @@ This module has been built on and tested against Puppet 4.4.0 and higher.
 The module has been tested on:
 
 * RedHat Enterprise Linux 6/7
-* OpenBSD 6.0/6.1
+* OpenBSD 6.0/6.1/6.2/6.3
 
 ## Development
 
