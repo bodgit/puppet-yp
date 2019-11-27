@@ -87,7 +87,7 @@ class yp::serv (
   Boolean                                   $manage_package         = $::yp::params::serv_manage_package,
   Array[String, 1]                          $maps                   = $::yp::params::serv_maps,
   Optional[String]                          $map_extension          = $::yp::params::serv_map_extension,
-  Optional[IP::Address::NoSubnet]           $master                 = undef,
+  Optional[Stdlib::IP::Address::Nosubnet]           $master                 = undef,
   Boolean                                   $merge_group            = $::yp::params::serv_merge_group,
   Boolean                                   $merge_passwd           = $::yp::params::serv_merge_passwd,
   Integer[0]                                $minimum_gid            = $::yp::params::serv_minimum_gid,
@@ -96,7 +96,7 @@ class yp::serv (
   Optional[String]                          $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
   String                                    $ypserv_service_name    = $::yp::params::serv_ypserv_service_name,
   Optional[String]                          $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,
-  Optional[Array[IP::Address::NoSubnet, 1]] $slaves                 = undef,
+  Optional[Array[Stdlib::IP::Address::Nosubnet, 1]] $slaves                 = undef,
   Stdlib::Absolutepath                      $yp_dir                 = $::yp::params::yp_dir,
 ) inherits ::yp::params {
 

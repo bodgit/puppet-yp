@@ -29,13 +29,14 @@ class yp::serv::service {
 
   if $::yp::serv::has_ypxfrd {
 
-    $ypxfrd_ensure = size($::yp::serv::slaves) ? {
-      0       => stopped,
-      default => running,
-    }
-    $ypxfrd_enable = size($::yp::serv::slaves) ? {
-      0       => false,
-      default => true,
+    #puppet6 does not allow size() arg to be undef, and array size is either greater than 1 thanks to parameter validation, or undef.
+    # empty array is not allowed.
+    if( $::yp::serv::slaves ) {
+      $ypxfrd_ensure = 'running'
+      $ypxfrd_enable = true
+    } else {
+      $ypxfrd_ensure = 'stopped'
+      $ypxfrd_enable = false
     }
 
     service { $::yp::serv::ypxfrd_service_name:

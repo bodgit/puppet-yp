@@ -2,7 +2,7 @@
 define yp::serv::map (
   String                          $domain,
   Optional[String]                $extension,
-  Optional[IP::Address::NoSubnet] $master,
+  Optional[Stdlib::IP::Address::Nosubnet] $master,
   Stdlib::Absolutepath            $yp_dir,
   String                          $map       = $name,
 ) {
