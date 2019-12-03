@@ -81,23 +81,23 @@
 # @see puppet_classes::yp::bind ::yp::bind
 # @see puppet_classes::yp::ldap ::yp::ldap
 class yp::serv (
-  String                                    $domain,
-  Boolean                                   $has_yppasswdd          = $::yp::params::serv_has_yppasswdd,
-  Boolean                                   $has_ypxfrd             = $::yp::params::serv_has_ypxfrd,
-  Boolean                                   $manage_package         = $::yp::params::serv_manage_package,
-  Array[String, 1]                          $maps                   = $::yp::params::serv_maps,
-  Optional[String]                          $map_extension          = $::yp::params::serv_map_extension,
+  String                                            $domain,
+  Boolean                                           $has_yppasswdd          = $::yp::params::serv_has_yppasswdd,
+  Boolean                                           $has_ypxfrd             = $::yp::params::serv_has_ypxfrd,
+  Boolean                                           $manage_package         = $::yp::params::serv_manage_package,
+  Array[String, 1]                                  $maps                   = $::yp::params::serv_maps,
+  Optional[String]                                  $map_extension          = $::yp::params::serv_map_extension,
   Optional[Stdlib::IP::Address::Nosubnet]           $master                 = undef,
-  Boolean                                   $merge_group            = $::yp::params::serv_merge_group,
-  Boolean                                   $merge_passwd           = $::yp::params::serv_merge_passwd,
-  Integer[0]                                $minimum_gid            = $::yp::params::serv_minimum_gid,
-  Integer[0]                                $minimum_uid            = $::yp::params::serv_minimum_uid,
-  Optional[String]                          $package_name           = $::yp::params::serv_package_name,
-  Optional[String]                          $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
-  String                                    $ypserv_service_name    = $::yp::params::serv_ypserv_service_name,
-  Optional[String]                          $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,
+  Boolean                                           $merge_group            = $::yp::params::serv_merge_group,
+  Boolean                                           $merge_passwd           = $::yp::params::serv_merge_passwd,
+  Integer[0]                                        $minimum_gid            = $::yp::params::serv_minimum_gid,
+  Integer[0]                                        $minimum_uid            = $::yp::params::serv_minimum_uid,
+  Optional[String]                                  $package_name           = $::yp::params::serv_package_name,
+  Optional[String]                                  $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
+  String                                            $ypserv_service_name    = $::yp::params::serv_ypserv_service_name,
+  Optional[String]                                  $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,
   Optional[Array[Stdlib::IP::Address::Nosubnet, 1]] $slaves                 = undef,
-  Stdlib::Absolutepath                      $yp_dir                 = $::yp::params::yp_dir,
+  Stdlib::Absolutepath                              $yp_dir                 = $::yp::params::yp_dir,
 ) inherits ::yp::params {
 
   if defined(Class['::yp::ldap']) {
