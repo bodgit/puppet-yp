@@ -46,6 +46,8 @@ class yp::ldap (
   Array[String, 1]                $maps            = $::yp::params::ldap_maps,
   String                          $service_name    = $::yp::params::ldap_service_name,
   Optional[Stdlib::Absolutepath]  $tls_cacert_file = undef,
+  Boolean                         $service_enable  = $::yp::params::ldap_service_enable,
+  Enum['running', 'stopped']      $service_ensure  = $::yp::params::ldap_service_ensure,
 ) inherits ::yp::params {
 
   if $::osfamily != 'OpenBSD' {

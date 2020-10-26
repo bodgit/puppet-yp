@@ -2,8 +2,8 @@
 class yp::serv::service {
 
   service { $::yp::serv::ypserv_service_name:
-    ensure     => running,
-    enable     => true,
+    ensure     => $::yp::serv::service_ensure,
+    enable     => $::yp::serv::service_enable,
     hasstatus  => true,
     hasrestart => true,
   }

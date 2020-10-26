@@ -1,10 +1,16 @@
 # @!visibility private
 class yp::params {
 
+  $bind_service_enable = true
+  $bind_service_ensure = 'running'
+  $ldap_service_enable = true
+  $ldap_service_ensure = 'running'
   $serv_merge_group  = true
   $serv_merge_passwd = true
   $serv_minimum_gid  = 1000
   $serv_minimum_uid  = 1000
+  $serv_service_enable = true
+  $serv_service_ensure = 'running'
   $yp_dir            = '/var/yp'
 
   case $::osfamily {

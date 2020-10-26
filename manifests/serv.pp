@@ -98,6 +98,8 @@ class yp::serv (
   Optional[String]                          $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,
   Optional[Array[IP::Address::NoSubnet, 1]] $slaves                 = undef,
   Stdlib::Absolutepath                      $yp_dir                 = $::yp::params::yp_dir,
+  Boolean                                   $service_enable         = $::yp::params::serv_service_enable,
+  Enum['running', 'stopped']                $service_ensure         = $::yp::params::serv_service_ensure,
 ) inherits ::yp::params {
 
   if defined(Class['::yp::ldap']) {

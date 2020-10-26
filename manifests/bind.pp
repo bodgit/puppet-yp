@@ -64,6 +64,8 @@ class yp::bind (
   Boolean                                   $manage_package = $::yp::params::bind_manage_package,
   Optional[String]                          $package_name   = $::yp::params::bind_package_name,
   String                                    $service_name   = $::yp::params::bind_service_name,
+  Boolean                                   $service_enable = $::yp::params::bind_service_enable,
+  Enum['running', 'stopped']                $service_ensure = $::yp::params::bind_service_ensure,
 ) inherits ::yp::params {
 
   contain ::yp::bind::install
