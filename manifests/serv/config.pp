@@ -1,15 +1,15 @@
 # @!visibility private
 class yp::serv::config {
 
-  $domain       = $::yp::serv::domain
-  $maps         = $::yp::serv::maps
-  $master       = $::yp::serv::master
-  $merge_group  = $::yp::serv::merge_group
-  $merge_passwd = $::yp::serv::merge_passwd
-  $minimum_gid  = $::yp::serv::minimum_gid
-  $minimum_uid  = $::yp::serv::minimum_uid
-  $yp_dir       = $::yp::serv::yp_dir
-  $slaves       = $::yp::serv::slaves
+  $domain       = $yp::serv::domain
+  $maps         = $yp::serv::maps
+  $master       = $yp::serv::master
+  $merge_group  = $yp::serv::merge_group
+  $merge_passwd = $yp::serv::merge_passwd
+  $minimum_gid  = $yp::serv::minimum_gid
+  $minimum_uid  = $yp::serv::minimum_uid
+  $yp_dir       = $yp::serv::yp_dir
+  $slaves       = $yp::serv::slaves
 
   file { "${yp_dir}/${domain}":
     ensure => directory,
@@ -73,9 +73,9 @@ class yp::serv::config {
     }
   }
 
-  ::yp::serv::map { $_maps:
+  yp::serv::map { $_maps:
     domain    => $domain,
-    extension => $::yp::serv::map_extension,
+    extension => $yp::serv::map_extension,
     master    => $master,
     yp_dir    => $yp_dir,
   }

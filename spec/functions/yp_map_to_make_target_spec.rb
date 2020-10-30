@@ -24,7 +24,7 @@ describe 'yp::map_to_make_target' do
 
       it { should run.with_params(map).and_return(target) }
       it { should run.with_params(maps).and_return(targets) }
-      it { expect { should run.with_params({}) }.to raise_error(/parameter 'maps' /) }
+      it { is_expected.to run.with_params({}).and_raise_error(%r{parameter 'maps' }) }
     end
   end
 end

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'yp::ldap::directory' do
 
   let(:pre_condition) do
-    'class { "::yp::ldap": domain => "example.com" }'
+    'class { "yp::ldap": domain => "example.com" }'
   end
 
   let(:title) do

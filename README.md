@@ -52,28 +52,28 @@ are known to work and used in the examples and tests in this module.
 Bind a client to a YP domain using three YP servers:
 
 ```puppet
-include ::portmap
+include portmap
 
-class { '::yp':
+class { 'yp':
   domain => 'example.com',
 }
 
-class { '::yp::bind':
+class { 'yp::bind':
   domain  => 'example.com',
   servers => ['192.0.2.1', '192.0.2.2', '192.0.2.3'],
 }
 
-Class['::portmap'] ~> Class['::yp::bind'] <~ Class['::yp']
+Class['portmap'] ~> Class['yp::bind'] <~ Class['yp']
 
 if $::osfamily == 'RedHat' {
-  class { '::nsswitch':
+  class { 'nsswitch':
     passwd    => ['files', 'nis', 'sss'],
     shadow    => ['files', 'nis', 'sss'],
     group     => ['files', 'nis', 'sss'],
     hosts     => ['files', 'nis', 'dns'],
     netgroup  => ['files', 'nis', 'sss'],
     automount => ['files', 'nis'],
-    require   => Class['::yp::bind'],
+    require   => Class['yp::bind'],
   }
 
   pam { 'nis':
@@ -90,7 +90,7 @@ if $::osfamily == 'RedHat' {
       'try_first_pass',
       'use_authtok',
     ],
-    require   => Class['::yp::bind'],
+    require   => Class['yp::bind'],
   }
 }
 ```
@@ -100,29 +100,29 @@ if $::osfamily == 'RedHat' {
 Create a standalone YP server:
 
 ```puppet
-include ::portmap
+include portmap
 
-class { '::yp':
+class { 'yp':
   domain => 'example.com',
 }
 
-class { '::yp::serv':
+class { 'yp::serv':
   domain => 'example.com',
 }
 
-Class['::portmap'] ~> Class['::yp::serv'] <- Class['::yp']
+Class['portmap'] ~> Class['yp::serv'] <- Class['yp']
 ```
 
 Create a master YP server with two additional slaves:
 
 ```puppet
-include ::portmap
+include portmap
 
-class { '::yp':
+class { 'yp':
   domain => 'example.com',
 }
 
-class { '::yp::serv':
+class { 'yp::serv':
   domain => 'example.com',
   maps   => [
     'passwd.byname',
@@ -137,19 +137,19 @@ class { '::yp::serv':
   ],
 }
 
-Class['::portmap'] ~> Class['::yp::serv'] <- Class['::yp']
+Class['portmap'] ~> Class['yp::serv'] <- Class['yp']
 ```
 
 Create a slave YP server pointing at the above master YP server:
 
 ```puppet
-include ::portmap
+include portmap
 
-class { '::yp':
+class { 'yp':
   domain => 'example.com',
 }
 
-class { '::yp::serv':
+class { 'yp::serv':
   domain => 'example.com',
   maps   => [
     'passwd.byname',
@@ -161,21 +161,21 @@ class { '::yp::serv':
   master => '192.0.2.1',
 }
 
-class { '::yp::bind':
+class { 'yp::bind':
   domain => 'example.com',
 }
 
-Class['::portmap'] ~> Class['::yp::serv'] <- Class['::yp']
-Class['::yp::serv'] -> Class['::yp::bind'] <~ Class['::yp']
+Class['portmap'] ~> Class['yp::serv'] <- Class['yp']
+Class['yp::serv'] -> Class['yp::bind'] <~ Class['yp']
 ```
 
 For OpenBSD only, set up `ypldap` to create YP maps from an LDAP server and
 also bind to it. This is the equivalent to PAM/LDAP on Linux:
 
 ```puppet
-include ::portmap
+include portmap
 
-class { '::yp::ldap':
+class { 'yp::ldap':
   domain      => 'example.com',
   directories => {
     'dc=example,dc=com' => {
@@ -186,15 +186,15 @@ class { '::yp::ldap':
   },
 }
 
-class { '::yp':
+class { 'yp':
   domain => 'example.com',
 }
 
-class { '::yp::bind':
+class { 'yp::bind':
   domain => 'example.com',
 }
 
-Class['::portmap'] ~> Class['::yp::ldap'] ~> Class['::yp::bind'] <~ Class['::yp']
+Class['portmap'] ~> Class['yp::ldap'] ~> Class['yp::bind'] <~ Class['yp']
 ```
 
 ## Reference

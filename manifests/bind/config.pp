@@ -1,8 +1,8 @@
 # @!visibility private
 class yp::bind::config {
 
-  $domain  = $::yp::bind::domain
-  $servers = $::yp::bind::servers
+  $domain  = $yp::bind::domain
+  $servers = $yp::bind::servers
 
   case $::osfamily {
     'OpenBSD': {

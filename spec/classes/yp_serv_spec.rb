@@ -15,7 +15,7 @@ describe 'yp::serv' do
       }
     end
 
-    it { expect { should compile }.to raise_error(/not supported on Unsupported/) }
+    it { is_expected.to compile.with_all_deps.and_raise_error(%r{not supported on Unsupported}) }
   end
 
   on_supported_os.each do |os, facts|

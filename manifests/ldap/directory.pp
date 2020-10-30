@@ -1,7 +1,7 @@
 # Define an LDAP directory for `ypldap` to poll.
 #
 # @example Define a directory
-#   ::yp::ldap::directory { 'dc=example,dc=com':
+#   yp::ldap::directory { 'dc=example,dc=com':
 #     server  => '192.0.2.1',
 #     bind_dn => 'cn=ypldap,dc=example,dc=com',
 #     bind_pw => 'secret',
@@ -25,7 +25,7 @@
 # @param port
 # @param user_filter The LDAP search filter to use when searching for users.
 #
-# @see puppet_classes::yp::ldap ::yp::ldap
+# @see puppet_classes::yp::ldap yp::ldap
 #
 # @since 3.0.0
 define yp::ldap::directory (
@@ -60,13 +60,13 @@ define yp::ldap::directory (
   Bodgitlib::LDAP::Filter           $user_filter      = '(objectClass=posixAccount)',
 ) {
 
-  if ! defined(Class['::yp::ldap']) {
+  if ! defined(Class['yp::ldap']) {
     fail('You must include the yp::ldap base class before using any yp::ldap defined resources')
   }
 
-  ::concat::fragment { "${::yp::ldap::conf_file} ${base_dn}":
+  ::concat::fragment { "${yp::ldap::conf_file} ${base_dn}":
     order   => '10',
     content => template("${module_name}/ypldap.conf.directory.erb"),
-    target  => $::yp::ldap::conf_file,
+    target  => $yp::ldap::conf_file,
   }
 }

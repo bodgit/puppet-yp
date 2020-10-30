@@ -22,13 +22,13 @@ describe 'yp::serv' do
   it 'should work with no errors' do
 
     pp = <<-EOS
-      include ::portmap
+      include portmap
 
-      class { '::yp':
+      class { 'yp':
         domain => 'example.com',
       }
 
-      class { '::yp::bind':
+      class { 'yp::bind':
         domain  => 'example.com',
         servers => [
           '127.0.0.1',
@@ -36,14 +36,14 @@ describe 'yp::serv' do
       }
 
       if $::osfamily == 'RedHat' {
-        class { '::nsswitch':
+        class { 'nsswitch':
           passwd    => ['files', 'nis', 'sss'],
           shadow    => ['files', 'nis', 'sss'],
           group     => ['files', 'nis', 'sss'],
           hosts     => ['files', 'nis', 'dns'],
           netgroup  => ['files', 'nis', 'sss'],
           automount => ['files', 'nis'],
-          require   => Class['::yp::bind'],
+          require   => Class['yp::bind'],
         }
 
         pam { 'nis':
@@ -60,17 +60,17 @@ describe 'yp::serv' do
             'try_first_pass',
             'use_authtok',
           ],
-          require   => Class['::yp::bind'],
+          require   => Class['yp::bind'],
         }
       }
 
-      class { '::yp::serv':
+      class { 'yp::serv':
         domain => 'example.com',
         maps   => ['#{maps.join("', '")}'],
       }
 
-      Class['::portmap'] ~> Class['::yp::serv'] <- Class['::yp']
-      Class['::yp::serv'] ~> Class['::yp::bind'] <- Class['::yp']
+      Class['portmap'] ~> Class['yp::serv'] <- Class['yp']
+      Class['yp::serv'] ~> Class['yp::bind'] <- Class['yp']
 
       group { 'bob':
         ensure => present,
@@ -85,7 +85,7 @@ describe 'yp::serv' do
         managehome => true,
         shell      => '#{shell}',
         uid        => 2001,
-        before     => Class['::yp::serv'],
+        before     => Class['yp::serv'],
       }
     EOS
 

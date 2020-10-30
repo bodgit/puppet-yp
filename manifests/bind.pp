@@ -1,13 +1,13 @@
 # Class for installing and managing `ypbind` daemon.
 #
 # @example Declaring the class
-#   include ::portmap
+#   include portmap
 #
-#   class { '::yp':
+#   class { 'yp':
 #     domain => 'example.com',
 #   }
 #
-#   class { '::yp::bind':
+#   class { 'yp::bind':
 #     domain  => 'example.com',
 #     servers => [
 #       '192.0.2.1',
@@ -16,17 +16,17 @@
 #     ],
 #   }
 #
-#   Class['::portmap'] ~> Class['::yp::bind'] <~ Class['::yp']
+#   Class['portmap'] ~> Class['yp::bind'] <~ Class['yp']
 #
 #   if $::osfamily == 'RedHat' {
-#     class { '::nsswitch':
+#     class { 'nsswitch':
 #       passwd    => ['files', 'nis', 'sss'],
 #       shadow    => ['files', 'nis', 'sss'],
 #       group     => ['files', 'nis', 'sss'],
 #       hosts     => ['files', 'nis', 'dns'],
 #       netgroup  => ['files', 'nis', 'sss'],
 #       automount => ['files', 'nis'],
-#       require   => Class['::yp::bind'],
+#       require   => Class['yp::bind'],
 #     }
 #
 #     pam { 'nis':
@@ -43,7 +43,7 @@
 #         'try_first_pass',
 #         'use_authtok',
 #       ],
-#       require   => Class['::yp::bind'],
+#       require   => Class['yp::bind'],
 #     }
 #   }
 #
@@ -56,20 +56,20 @@
 # @param service_name The name of the service managing `ypbind`.
 #
 # @see puppet_classes::yp ::yp
-# @see puppet_classes::yp::serv ::yp::serv
-# @see puppet_classes::yp::ldap ::yp::ldap
+# @see puppet_classes::yp::serv yp::serv
+# @see puppet_classes::yp::ldap yp::ldap
 class yp::bind (
   String                                    $domain,
   Optional[Array[IP::Address::NoSubnet, 1]] $servers        = undef,
-  Boolean                                   $manage_package = $::yp::params::bind_manage_package,
-  Optional[String]                          $package_name   = $::yp::params::bind_package_name,
-  String                                    $service_name   = $::yp::params::bind_service_name,
-) inherits ::yp::params {
+  Boolean                                   $manage_package = $yp::params::bind_manage_package,
+  Optional[String]                          $package_name   = $yp::params::bind_package_name,
+  String                                    $service_name   = $yp::params::bind_service_name,
+) inherits yp::params {
 
-  contain ::yp::bind::install
-  contain ::yp::bind::config
-  contain ::yp::bind::service
+  contain yp::bind::install
+  contain yp::bind::config
+  contain yp::bind::service
 
-  Class['::yp::bind::install'] -> Class['::yp::bind::config']
-    ~> Class['::yp::bind::service']
+  Class['yp::bind::install'] -> Class['yp::bind::config']
+    ~> Class['yp::bind::service']
 }

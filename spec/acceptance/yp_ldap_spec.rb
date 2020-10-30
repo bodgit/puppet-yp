@@ -11,8 +11,8 @@ describe 'yp::ldap' do
       },
     }
 
-    include ::openldap
-    class { '::openldap::server':
+    include openldap
+    class { 'openldap::server':
       root_dn       => 'cn=Manager,dc=example,dc=com',
       root_password => 'secret',
       suffix        => 'dc=example,dc=com',
@@ -50,21 +50,21 @@ describe 'yp::ldap' do
       ],
     }
 
-    ::openldap::server::schema { 'cosine':
+    openldap::server::schema { 'cosine':
       ensure => present,
     }
-    ::openldap::server::schema { 'inetorgperson':
+    openldap::server::schema { 'inetorgperson':
       ensure  => present,
-      require => ::Openldap::Server::Schema['cosine'],
+      require => openldap::Server::Schema['cosine'],
     }
-    ::openldap::server::schema { 'nis':
+    openldap::server::schema { 'nis':
       ensure  => present,
-      require => ::Openldap::Server::Schema['inetorgperson'],
+      require => Openldap::Server::Schema['inetorgperson'],
     }
 
-    include ::portmap
+    include portmap
 
-    class { '::yp::ldap':
+    class { 'yp::ldap':
       domain      => 'example.com',
       interval    => 1,
       directories => {
@@ -74,18 +74,18 @@ describe 'yp::ldap' do
           server  => '127.0.0.1',
         },
       },
-      require     => Class['::openldap::server'],
+      require     => Class['openldap::server'],
     }
 
-    class { '::yp':
+    class { 'yp':
       domain => 'example.com',
     }
 
-    class { '::yp::bind':
+    class { 'yp::bind':
       domain => 'example.com',
     }
 
-    Class['::portmap'] ~> Class['::yp::ldap'] ~> Class['::yp::bind'] <~ Class['::yp']
+    Class['portmap'] ~> Class['yp::ldap'] ~> Class['yp::bind'] <~ Class['yp']
   EOS
 
   case fact('osfamily')

@@ -1,7 +1,7 @@
 # @!visibility private
 class yp::config {
 
-  $domain = $::yp::domain
+  $domain = $yp::domain
 
   case $::osfamily {
     'OpenBSD': {
@@ -32,7 +32,7 @@ class yp::config {
     unless => "domainname | grep -q ^${domain}\$",
   }
 
-  file { $::yp::yp_dir:
+  file { $yp::yp_dir:
     ensure => directory,
     owner  => 0,
     group  => 0,

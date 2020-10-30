@@ -1,13 +1,13 @@
 # Class for installing and managing `ypserv` daemon.
 #
 # @example Create a master YP server with two additional slaves
-#   include ::portmap
+#   include portmap
 #
-#   class { '::yp':
+#   class { 'yp':
 #     domain => 'example.com',
 #   }
 #
-#   class { '::yp::serv':
+#   class { 'yp::serv':
 #     domain => 'example.com',
 #     maps   => [
 #       'passwd.byname',
@@ -22,16 +22,16 @@
 #     ],
 #   }
 #
-#   Class['::portmap'] ~> Class['::yp::serv'] <- Class['::yp']
+#   Class['portmap'] ~> Class['yp::serv'] <- Class['yp']
 #
 # @example Create a slave YP server pointing at the above master YP server
 #   include ::portmap
 #
-#   class { '::yp':
+#   class { 'yp':
 #     domain => 'example.com',
 #   }
 #
-#   class { '::yp::serv':
+#   class { 'yp::serv':
 #     domain => 'example.com',
 #     maps   => [
 #       'passwd.byname',
@@ -43,12 +43,12 @@
 #     master => '192.0.2.1',
 #   }
 #
-#   class { '::yp::bind':
+#   class { 'yp::bind':
 #     domain => 'example.com',
 #   }
 #
-#   Class['::portmap'] ~> Class['::yp::serv'] <- Class['::yp']
-#   Class['::yp::serv'] ~> Class['::yp::bind'] <- Class['::yp']
+#   Class['portmap'] ~> Class['yp::serv'] <- Class['yp']
+#   Class['yp::serv'] ~> Class['yp::bind'] <- Class['yp']
 #
 # @param domain The YP/NIS domain.
 # @param has_yppasswdd Does this platform provide `yppasswdd` daemon for
@@ -78,36 +78,36 @@
 # @param yp_dir The base YP directory, usually `/var/yp`.
 #
 # @see puppet_classes::yp ::yp
-# @see puppet_classes::yp::bind ::yp::bind
-# @see puppet_classes::yp::ldap ::yp::ldap
+# @see puppet_classes::yp::bind yp::bind
+# @see puppet_classes::yp::ldap yp::ldap
 class yp::serv (
-  String                                    $domain,
-  Boolean                                   $has_yppasswdd          = $::yp::params::serv_has_yppasswdd,
-  Boolean                                   $has_ypxfrd             = $::yp::params::serv_has_ypxfrd,
-  Boolean                                   $manage_package         = $::yp::params::serv_manage_package,
-  Array[String, 1]                          $maps                   = $::yp::params::serv_maps,
-  Optional[String]                          $map_extension          = $::yp::params::serv_map_extension,
-  Optional[IP::Address::NoSubnet]           $master                 = undef,
-  Boolean                                   $merge_group            = $::yp::params::serv_merge_group,
-  Boolean                                   $merge_passwd           = $::yp::params::serv_merge_passwd,
-  Integer[0]                                $minimum_gid            = $::yp::params::serv_minimum_gid,
-  Integer[0]                                $minimum_uid            = $::yp::params::serv_minimum_uid,
-  Optional[String]                          $package_name           = $::yp::params::serv_package_name,
-  Optional[String]                          $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
-  String                                    $ypserv_service_name    = $::yp::params::serv_ypserv_service_name,
-  Optional[String]                          $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,
-  Optional[Array[IP::Address::NoSubnet, 1]] $slaves                 = undef,
-  Stdlib::Absolutepath                      $yp_dir                 = $::yp::params::yp_dir,
-) inherits ::yp::params {
+  String                                 $domain,
+  Boolean                                $has_yppasswdd          = $yp::params::serv_has_yppasswdd,
+  Boolean                                $has_ypxfrd             = $yp::params::serv_has_ypxfrd,
+  Boolean                                $manage_package         = $yp::params::serv_manage_package,
+  Array[String, 1]                       $maps                   = $yp::params::serv_maps,
+  Optional[String]                       $map_extension          = $yp::params::serv_map_extension,
+  Optional[IP::Address::NoSubnet]        $master                 = undef,
+  Boolean                                $merge_group            = $yp::params::serv_merge_group,
+  Boolean                                $merge_passwd           = $yp::params::serv_merge_passwd,
+  Integer[0]                             $minimum_gid            = $yp::params::serv_minimum_gid,
+  Integer[0]                             $minimum_uid            = $yp::params::serv_minimum_uid,
+  Optional[String]                       $package_name           = $yp::params::serv_package_name,
+  Optional[String]                       $yppasswdd_service_name = $yp::params::serv_yppasswdd_service_name,
+  String                                 $ypserv_service_name    = $yp::params::serv_ypserv_service_name,
+  Optional[String]                       $ypxfrd_service_name    = $yp::params::serv_ypxfrd_service_name,
+  Optional[Array[IP::Address::NoSubnet]] $slaves                 = [],
+  Stdlib::Absolutepath                   $yp_dir                 = $yp::params::yp_dir,
+) inherits yp::params {
 
-  if defined(Class['::yp::ldap']) {
+  if defined(Class['yp::ldap']) {
     fail('yp::ldap and yp::serv are mutually exclusive.')
   }
 
-  contain ::yp::serv::install
-  contain ::yp::serv::config
-  contain ::yp::serv::service
+  contain yp::serv::install
+  contain yp::serv::config
+  contain yp::serv::service
 
-  Class['::yp::serv::install'] -> Class['::yp::serv::config']
-    ~> Class['::yp::serv::service']
+  Class['yp::serv::install'] -> Class['yp::serv::config']
+    ~> Class['yp::serv::service']
 }
