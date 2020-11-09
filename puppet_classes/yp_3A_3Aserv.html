@@ -6,15 +6,15 @@
 <title>
   Puppet Class: yp::serv
   
-    &mdash; Documentation by YARD 0.9.8
+    &mdash; Documentation by YARD 0.9.25
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "puppet_classes::yp::serv";
   relpath = '../';
 </script>
@@ -64,7 +64,7 @@
   
   <dl>
     <dt>Inherits:</dt>
-    <dd>::yp::params</dd>
+    <dd><span class='object_link'>yp::params</span></dd>
   </dl>
   
   
@@ -84,6 +84,8 @@
 
   </div>
 </div>
+
+
 <div class="tags">
   
   <div class="examples">
@@ -266,7 +268,7 @@ includes some esoteric ones.</p>
         <span class='name'>master</span>
       
       
-        <span class='type'>(<tt>Optional[IP::Address::NoSubnet]</tt>)</span>
+        <span class='type'>(<tt>Optional[Stdlib::IP::Address::NoSubnet]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -373,6 +375,32 @@ daemon.</p>
   
     <li>
       
+        <span class='name'>service_enable</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>$::yp::params::serv_service_enable</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>service_ensure</span>
+      
+      
+        <span class='type'>(<tt>Enum['running', 'stopped']</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>$::yp::params::serv_service_ensure</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>yppasswdd_service_name</span>
       
       
@@ -430,7 +458,7 @@ daemon.</p>
         <span class='name'>slaves</span>
       
       
-        <span class='type'>(<tt>Optional[Array[IP::Address::NoSubnet, 1]]</tt>)</span>
+        <span class='type'>(<tt>Optional[Array[Stdlib::IP::Address::NoSubnet, 1]]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -465,6 +493,7 @@ when a map is updated.</p>
 </ul>
 
 
+
   <p class="tag_title">See Also:</p>
   <ul class="see">
     
@@ -483,8 +512,6 @@ when a map is updated.</p>
         <pre class="lines">
 
 
-83
-84
 85
 86
 87
@@ -513,41 +540,47 @@ when a map is updated.</p>
 110
 111
 112
-113</pre>
+113
+114
+115
+116
+117</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/serv.pp', line 83</span>
+        <pre class="code"><span class="info file"># File 'manifests/serv.pp', line 85</span>
 
 class yp::serv (
-  String                                    $domain,
-  Boolean                                   $has_yppasswdd          = $::yp::params::serv_has_yppasswdd,
-  Boolean                                   $has_ypxfrd             = $::yp::params::serv_has_ypxfrd,
-  Boolean                                   $manage_package         = $::yp::params::serv_manage_package,
-  Array[String, 1]                          $maps                   = $::yp::params::serv_maps,
-  Optional[String]                          $map_extension          = $::yp::params::serv_map_extension,
-  Optional[IP::Address::NoSubnet]           $master                 = undef,
-  Boolean                                   $merge_group            = $::yp::params::serv_merge_group,
-  Boolean                                   $merge_passwd           = $::yp::params::serv_merge_passwd,
-  Integer[0]                                $minimum_gid            = $::yp::params::serv_minimum_gid,
-  Integer[0]                                $minimum_uid            = $::yp::params::serv_minimum_uid,
-  Optional[String]                          $package_name           = $::yp::params::serv_package_name,
-  Optional[String]                          $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
-  String                                    $ypserv_service_name    = $::yp::params::serv_ypserv_service_name,
-  Optional[String]                          $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,
-  Optional[Array[IP::Address::NoSubnet, 1]] $slaves                 = undef,
-  Stdlib::Absolutepath                      $yp_dir                 = $::yp::params::yp_dir,
-) inherits ::yp::params {
+  String                                            $domain,
+  Boolean                                           $has_yppasswdd          = $::yp::params::serv_has_yppasswdd,
+  Boolean                                           $has_ypxfrd             = $::yp::params::serv_has_ypxfrd,
+  Boolean                                           $manage_package         = $::yp::params::serv_manage_package,
+  Array[String, 1]                                  $maps                   = $::yp::params::serv_maps,
+  Optional[String]                                  $map_extension          = $::yp::params::serv_map_extension,
+  Optional[Stdlib::IP::Address::NoSubnet]           $master                 = undef,
+  Boolean                                           $merge_group            = $::yp::params::serv_merge_group,
+  Boolean                                           $merge_passwd           = $::yp::params::serv_merge_passwd,
+  Integer[0]                                        $minimum_gid            = $::yp::params::serv_minimum_gid,
+  Integer[0]                                        $minimum_uid            = $::yp::params::serv_minimum_uid,
+  Optional[String]                                  $package_name           = $::yp::params::serv_package_name,
+  Boolean                                           $service_enable         = $::yp::params::serv_service_enable,
+  Enum[&#39;running&#39;, &#39;stopped&#39;]                        $service_ensure         = $::yp::params::serv_service_ensure,
+  Optional[String]                                  $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
+  String                                            $ypserv_service_name    = $::yp::params::serv_ypserv_service_name,
+  Optional[String]                                  $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,
+  Optional[Array[Stdlib::IP::Address::NoSubnet, 1]] $slaves                 = undef,
+  Stdlib::Absolutepath                              $yp_dir                 = $::yp::params::yp_dir,
+) inherits yp::params {
 
-  if defined(Class[&#39;::yp::ldap&#39;]) {
+  if defined(Class[&#39;yp::ldap&#39;]) {
     fail(&#39;yp::ldap and yp::serv are mutually exclusive.&#39;)
   }
 
-  contain ::yp::serv::install
-  contain ::yp::serv::config
-  contain ::yp::serv::service
+  contain yp::serv::install
+  contain yp::serv::config
+  contain yp::serv::service
 
-  Class[&#39;::yp::serv::install&#39;] -&gt; Class[&#39;::yp::serv::config&#39;]
-    ~&gt; Class[&#39;::yp::serv::service&#39;]
+  Class[&#39;yp::serv::install&#39;] -&gt; Class[&#39;yp::serv::config&#39;]
+    ~&gt; Class[&#39;yp::serv::service&#39;]
 }</pre>
       </td>
     </tr>
@@ -556,9 +589,7 @@ class yp::serv (
 </div>
 
       <div id="footer">
-  Generated on Tue Jul 10 23:15:18 2018 by
-  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.8 (ruby-2.4.3).
+     Generated by <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>.
 </div>
 
     </div>

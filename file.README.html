@@ -6,15 +6,15 @@
 <title>
   File: README
   
-    &mdash; Documentation by YARD 0.9.8
+    &mdash; Documentation by YARD 0.9.25
   
 </title>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "";
   relpath = '';
 </script>
@@ -60,39 +60,39 @@
       <div id="content"><div id='filecontents'>
 <h1 id="label-yp">yp</h1>
 
-<p>Tested with Travis CI</p>
-
 <p><a href="https://travis-ci.org/bodgit/puppet-yp"><img
 src="https://travis-ci.org/bodgit/puppet-yp.svg?branch=master"></a> <a
-href="https://coveralls.io/github/bodgit/puppet-yp?branch=master"><img
-src="https://coveralls.io/repos/bodgit/puppet-yp/badge.svg?branch=master&service=github"></a>
-<a href="https://forge.puppetlabs.com/bodgit/yp"><img
-src="http://img.shields.io/puppetforge/v/bodgit/yp.svg"></a> <a
-href="https://gemnasium.com/bodgit/puppet-yp"><img
-src="https://gemnasium.com/bodgit/puppet-yp.svg"></a></p>
+href="https://codecov.io/gh/bodgit/puppet-yp"><img
+src="https://img.shields.io/codecov/c/github/bodgit/puppet-yp"></a> <a
+href="https://forge.puppetlabs.com/bodgit/yp"><img
+src="http://img.shields.io/puppetforge/v/bodgit/yp"></a> <a
+href="https://forge.puppetlabs.com/bodgit/yp"><img
+src="https://img.shields.io/puppetforge/dt/bodgit/yp"></a> <a
+href="https://forge.puppetlabs.com/bodgit/yp"><img
+src="https://img.shields.io/puppetforge/pdk-version/bodgit/yp"></a></p>
 
 <h4 id="label-Table+of+Contents">Table of Contents</h4>
 <ol><li>
-<p><a href="#description">Description</a></p>
+<p><a href="#label-Description">Description</a></p>
 </li><li>
-<p><a href="#setup">Setup - The basics of getting started with yp</a></p>
+<p><a href="#label-Setup">Setup - The basics of getting started with yp</a></p>
 <ul><li>
-<p><a href="#what-yp-affects">What yp affects</a></p>
+<p><a href="#label-What+yp+affects">What yp affects</a></p>
 </li><li>
-<p><a href="#setup-requirements">Setup requirements</a></p>
+<p><a href="#label-Setup+requirements">Setup requirements</a></p>
 </li><li>
-<p><a href="#beginning-with-yp">Beginning with yp</a></p>
+<p><a href="#label-Beginning+with+yp">Beginning with yp</a></p>
 </li></ul>
 </li><li>
-<p><a href="#usage">Usage - Configuration options and additional
+<p><a href="#label-Usage">Usage - Configuration options and additional
 functionality</a></p>
 </li><li>
-<p><a href="#reference">Reference - An under-the-hood peek at what the module
+<p><a href="#label-Reference">Reference - An under-the-hood peek at what the module
 is doing and how</a></p>
 </li><li>
-<p><a href="#limitations">Limitations - OS compatibility, etc.</a></p>
+<p><a href="#label-Limitations">Limitations - OS compatibility, etc.</a></p>
 </li><li>
-<p><a href="#development">Development - Guide for contributing to the
+<p><a href="#label-Development">Development - Guide for contributing to the
 module</a></p>
 </li></ol>
 
@@ -272,7 +272,9 @@ Class[&#39;::portmap&#39;] ~&gt; Class[&#39;::yp::ldap&#39;] ~&gt; Class[&#39;::
 <p>The reference documentation is generated with <a
 href="https://github.com/puppetlabs/puppet-strings">puppet-strings</a> and
 the latest version of the documentation is hosted at <a
-href="https://bodgit.github.io/puppet-yp/">bodgit.github.io/puppet-yp/</a>.</p>
+href="https://bodgit.github.io/puppet-yp/">bodgit.github.io/puppet-yp/</a>
+and available also in the <a
+href="https://github.com/bodgit/puppet-yp/blob/master/REFERENCE.md">REFERENCE.md</a>.</p>
 
 <h2 id="label-Limitations">Limitations</h2>
 
@@ -282,7 +284,7 @@ bar <code>ypserv</code> so I added that and made sure it was portable
 enough to work on one other OS. It works however I don&#39;t expect many
 people to still be using traditional YP/NIS.</p>
 
-<p>This module has been built on and tested against Puppet 4.4.0 and higher.</p>
+<p>This module has been built on and tested against Puppet 5 and higher.</p>
 
 <p>The module has been tested on:</p>
 <ul><li>
@@ -293,11 +295,13 @@ people to still be using traditional YP/NIS.</p>
 
 <h2 id="label-Development">Development</h2>
 
-<p>The module has both <a href="http://rspec-puppet.com">rspec-puppet</a> and
-<a href="https://github.com/puppetlabs/beaker-rspec">beaker-rspec</a>
-tests. Run them with:</p>
+<p>The module relies on <a
+href="https://puppet.com/docs/pdk/1.x/pdk.html">PDK</a> and has both <a
+href="http://rspec-puppet.com">rspec-puppet</a> and <a
+href="https://github.com/puppetlabs/beaker-rspec">beaker-rspec</a> tests.
+Run them with:</p>
 
-<pre class="code ruby"><code class="ruby">$ bundle exec rake test
+<pre class="code ruby"><code class="ruby">$ bundle exec rake spec
 $ PUPPET_INSTALL_TYPE=agent PUPPET_INSTALL_VERSION=x.y.z bundle exec rake beaker:&lt;nodeset&gt;</code></pre>
 
 <p>Please log issues or pull requests at <a
@@ -305,9 +309,7 @@ href="https://github.com/bodgit/puppet-yp">github</a>.</p>
 </div></div>
 
       <div id="footer">
-  Generated on Tue Jul 10 23:15:18 2018 by
-  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.8 (ruby-2.4.3).
+     Generated by <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>.
 </div>
 
     </div>
