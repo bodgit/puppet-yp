@@ -53,6 +53,8 @@
 # @param manage_package Whether to manage a package or not. Some operating
 #   systems have `ypbind` as part of the base system.
 # @param package_name The name of the package.
+# @param service_enable
+# @param service_ensure
 # @param service_name The name of the service managing `ypbind`.
 #
 # @see puppet_classes::yp ::yp
@@ -63,6 +65,8 @@ class yp::bind (
   Optional[Array[IP::Address::NoSubnet, 1]] $servers        = undef,
   Boolean                                   $manage_package = $::yp::params::bind_manage_package,
   Optional[String]                          $package_name   = $::yp::params::bind_package_name,
+  Boolean                                   $service_enable = $::yp::params::bind_service_enable,
+  Enum['running', 'stopped']                $service_ensure = $::yp::params::bind_service_ensure,
   String                                    $service_name   = $::yp::params::bind_service_name,
 ) inherits yp::params {
 
