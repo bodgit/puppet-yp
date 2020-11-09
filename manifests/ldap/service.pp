@@ -2,8 +2,8 @@
 class yp::ldap::service {
 
   service { $::yp::ldap::service_name:
-    ensure     => running,
-    enable     => true,
+    ensure     => $::yp::ldap::service_ensure,
+    enable     => $::yp::ldap::service_enable,
     hasstatus  => true,
     hasrestart => true,
   }

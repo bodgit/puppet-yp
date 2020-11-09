@@ -70,6 +70,8 @@
 #   maps.
 # @param package_name The name of the package to install that provides the
 #   `ypserv` daemon.
+# @param service_enable
+# @param service_ensure
 # @param yppasswdd_service_name The name of the service managing `yppasswdd`.
 # @param ypserv_service_name The name of the service managing `ypserv`.
 # @param ypxfrd_service_name The name of the service managing `ypxfrd`.
@@ -93,6 +95,8 @@ class yp::serv (
   Integer[0]                                $minimum_gid            = $::yp::params::serv_minimum_gid,
   Integer[0]                                $minimum_uid            = $::yp::params::serv_minimum_uid,
   Optional[String]                          $package_name           = $::yp::params::serv_package_name,
+  Boolean                                   $service_enable         = $::yp::params::serv_service_enable,
+  Enum['running', 'stopped']                $service_ensure         = $::yp::params::serv_service_ensure,
   Optional[String]                          $yppasswdd_service_name = $::yp::params::serv_yppasswdd_service_name,
   String                                    $ypserv_service_name    = $::yp::params::serv_ypserv_service_name,
   Optional[String]                          $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,

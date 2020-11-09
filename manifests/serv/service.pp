@@ -2,8 +2,8 @@
 class yp::serv::service {
 
   service { $::yp::serv::ypserv_service_name:
-    ensure     => running,
-    enable     => true,
+    ensure     => $::yp::serv::service_ensure,
+    enable     => $::yp::serv::service_enable,
     hasstatus  => true,
     hasrestart => true,
   }
@@ -11,11 +11,11 @@ class yp::serv::service {
   if $::yp::serv::has_yppasswdd {
 
     $yppasswdd_ensure = $::yp::serv::master ? {
-      undef   => running,
+      undef   => $::yp::serv::service_ensure,
       default => stopped,
     }
     $yppasswdd_enable = $::yp::serv::master ? {
-      undef   => true,
+      undef   => $::yp::serv::service_enable,
       default => false,
     }
 
@@ -31,11 +31,11 @@ class yp::serv::service {
 
     $ypxfrd_ensure = $::yp::serv::slaves ? {
       undef   => stopped,
-      default => running,
+      default => $::yp::serv::service_ensure,
     }
     $ypxfrd_enable = $::yp::serv::slaves ? {
       undef   => false,
-      default => true,
+      default => $::yp::serv::service_enable,
     }
 
     service { $::yp::serv::ypxfrd_service_name:

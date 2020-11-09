@@ -31,6 +31,8 @@
 # @param directories
 # @param interval How often to refresh the maps from LDAP.
 # @param maps The list of YP maps to provide based on LDAP searches.
+# @param service_enable
+# @param service_ensure
 # @param service_name The name of the service managing `ypldap`.
 # @param tls_cacert_file
 #
@@ -44,6 +46,8 @@ class yp::ldap (
   Stdlib::Absolutepath            $conf_file       = $::yp::params::ldap_conf_file,
   Integer[1]                      $interval        = 60,
   Array[String, 1]                $maps            = $::yp::params::ldap_maps,
+  Boolean                         $service_enable  = $::yp::params::ldap_service_enable,
+  Enum['running', 'stopped']      $service_ensure  = $::yp::params::ldap_service_ensure,
   String                          $service_name    = $::yp::params::ldap_service_name,
   Optional[Stdlib::Absolutepath]  $tls_cacert_file = undef,
 ) inherits yp::params {
