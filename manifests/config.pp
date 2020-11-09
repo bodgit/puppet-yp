@@ -3,7 +3,7 @@ class yp::config {
 
   $domain = $::yp::domain
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'OpenBSD': {
       file { '/etc/defaultdomain':
         ensure  => file,

@@ -10,7 +10,9 @@ describe 'yp::bind' do
   context 'on unsupported distributions' do
     let(:facts) do
       {
-        osfamily: 'Unsupported',
+        os: {
+          family: 'Unsupported',
+        },
       }
     end
 
@@ -20,7 +22,7 @@ describe 'yp::bind' do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
-        facts.merge(augeasversion: '1.3.0')
+        facts.merge(augeas: { version: '1.3.0' })
       end
 
       it { is_expected.to compile.with_all_deps }

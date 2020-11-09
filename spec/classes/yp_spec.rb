@@ -10,7 +10,9 @@ describe 'yp' do
   context 'on unsupported distributions' do
     let(:facts) do
       {
-        osfamily: 'Unsupported',
+        os: {
+          family: 'Unsupported',
+        },
       }
     end
 

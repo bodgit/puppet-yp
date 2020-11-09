@@ -7,7 +7,7 @@ class yp::params {
   $serv_minimum_uid  = 1000
   $yp_dir            = '/var/yp'
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'OpenBSD': {
       $bind_manage_package         = false
       $bind_package_name           = undef
@@ -107,7 +107,7 @@ class yp::params {
       $serv_ypxfrd_service_name    = 'ypxfrd'
     }
     default: {
-      fail("The ${module_name} module is not supported on ${::osfamily} based systems.")
+      fail("The ${module_name} module is not supported on ${facts['os']['family']} based systems.")
     }
   }
 }

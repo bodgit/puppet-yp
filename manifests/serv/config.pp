@@ -25,7 +25,7 @@ class yp::serv::config {
     $targets = yp::map_to_make_target($maps)
     $_maps   = $maps
 
-    case $::osfamily {
+    case $facts['os']['family'] {
       'OpenBSD': {
         file { "${yp_dir}/Makefile":
           ensure  => file,

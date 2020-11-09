@@ -46,18 +46,18 @@ class yp::ldap (
   Array[String, 1]                $maps            = $::yp::params::ldap_maps,
   String                          $service_name    = $::yp::params::ldap_service_name,
   Optional[Stdlib::Absolutepath]  $tls_cacert_file = undef,
-) inherits ::yp::params {
+) inherits yp::params {
 
-  if $::osfamily != 'OpenBSD' {
-    fail("The yp::ldap class is not supported on ${::osfamily} based systems.")
+  if $facts['os']['family'] != 'OpenBSD' {
+    fail("The yp::ldap class is not supported on ${facts['os']['family']} based systems.")
   }
 
-  if defined(Class['::yp::serv']) {
+  if defined(Class['yp::serv']) {
     fail('yp::serv and yp::ldap are mutually exclusive.')
   }
 
-  contain ::yp::ldap::config
-  contain ::yp::ldap::service
+  contain yp::ldap::config
+  contain yp::ldap::service
 
-  Class['::yp::ldap::config'] ~> Class['::yp::ldap::service']
+  Class['yp::ldap::config'] ~> Class['yp::ldap::service']
 }

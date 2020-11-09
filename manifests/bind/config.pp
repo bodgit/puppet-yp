@@ -4,7 +4,7 @@ class yp::bind::config {
   $domain  = $::yp::bind::domain
   $servers = $::yp::bind::servers
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'OpenBSD': {
       file { '/etc/yp':
         ensure  => directory,
@@ -58,7 +58,7 @@ class yp::bind::config {
         ],
       }
 
-      if versioncmp($::augeasversion, '1.4.0') < 0 {
+      if versioncmp($facts['augeas']['version'], '1.4.0') < 0 {
         file { '/usr/local/share/augeas/lenses/passwd.aug':
           ensure  => file,
           owner   => 0,
@@ -68,7 +68,7 @@ class yp::bind::config {
         }
       }
 
-      if versioncmp($::augeasversion, '1.5.0') < 0 {
+      if versioncmp($facts['augeas']['version'], '1.5.0') < 0 {
         file { '/usr/local/share/augeas/lenses/masterpasswd.aug':
           ensure  => file,
           owner   => 0,

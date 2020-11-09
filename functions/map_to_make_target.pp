@@ -16,7 +16,7 @@ function yp::map_to_make_target(Variant[String, Array[String, 1]] $maps) {
     '(?x) (?: \. by[a-z]+ | (?<= mail ) \. aliases ) $' => '',
   }
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'OpenBSD': {
       $gsubs = $default + {
         '(?x) ^ mail $' => 'aliases',

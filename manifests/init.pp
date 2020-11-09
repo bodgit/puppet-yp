@@ -14,7 +14,7 @@
 class yp (
   String               $domain,
   Stdlib::Absolutepath $yp_dir = $::yp::params::yp_dir,
-) inherits ::yp::params {
+) inherits yp::params {
 
-  contain ::yp::config
+  contain yp::config
 }
