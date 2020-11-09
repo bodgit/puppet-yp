@@ -7,13 +7,10 @@ fixtures:
       ref: "1.1.1"
     bodgitlib:
       repo: "bodgit/bodgitlib"
-      ref: "2.0.1"
+      ref: "3.0.0"
     concat:
       repo: "puppetlabs/concat"
-      ref: "4.2.1"
-    ip:
-      repo: "thrnio/ip"
-      ref: "1.0.1"
+      ref: "6.2.0"
     stdlib:
       repo: "puppetlabs/stdlib"
-      ref: "4.25.1"
+      ref: "6.5.0"
