@@ -1,10 +1,10 @@
 # @!visibility private
 define yp::serv::map (
-  String                          $domain,
-  Optional[String]                $extension,
-  Optional[IP::Address::NoSubnet] $master,
-  Stdlib::Absolutepath            $yp_dir,
-  String                          $map       = $name,
+  String                                  $domain,
+  Optional[String]                        $extension,
+  Optional[Stdlib::IP::Address::NoSubnet] $master,
+  Stdlib::Absolutepath                    $yp_dir,
+  String                                  $map       = $name,
 ) {
 
   if $master {
