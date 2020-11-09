@@ -1,6 +1,6 @@
 {
   "name": "bodgit-yp",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "author": "bodgit",
   "summary": "Puppet Module for managing YP",
   "license": "Apache-2.0",
