@@ -1,13 +1,12 @@
 require 'spec_helper'
 
 describe 'yp::ldap' do
-
   let(:params) do
     {
-      :domain      => 'example.com',
-      :directories => {
+      domain: 'example.com',
+      directories: {
         'dc=example,dc=com' => {
-          'server'  => '127.0.0.1'
+          'server' => '127.0.0.1',
         },
       },
     }
@@ -16,28 +15,29 @@ describe 'yp::ldap' do
   context 'on unsupported distributions' do
     let(:facts) do
       {
-        :osfamily => 'Unsupported'
+        osfamily: 'Unsupported',
       }
     end
 
-    it { expect { should compile }.to raise_error(/not supported on Unsupported/) }
+    it { is_expected.to compile.and_raise_error(%r{not supported on Unsupported}) }
   end
 
   on_supported_os.each do |os, facts|
+    next if os !~ %r{^openbsd}
 
-    next if os !~ /^openbsd/
-
-    context "on #{os}", :compile do
+    context "on #{os}" do
       let(:facts) do
         facts
       end
 
-      it { should contain_class('yp::ldap') }
-      it { should contain_class('yp::ldap::config') }
-      it { should contain_class('yp::ldap::service') }
-      it { should contain_class('yp::params') }
-      it { should contain_concat('/etc/ypldap.conf') }
-      it { should contain_concat__fragment('/etc/ypldap.conf global').with_content(<<-EOS.gsub(/^ {8}/, '')) }
+      it { is_expected.to compile.with_all_deps }
+
+      it { is_expected.to contain_class('yp::ldap') }
+      it { is_expected.to contain_class('yp::ldap::config') }
+      it { is_expected.to contain_class('yp::ldap::service') }
+      it { is_expected.to contain_class('yp::params') }
+      it { is_expected.to contain_concat('/etc/ypldap.conf') }
+      it { is_expected.to contain_concat__fragment('/etc/ypldap.conf global').with_content(<<-EOS.gsub(%r{^ {8}}, '')) }
 
         domain		"example.com"
         interval	60
@@ -47,7 +47,7 @@ describe 'yp::ldap' do
         provide map	"group.bygid"
         provide map	"netid.byname"
         EOS
-      it { should contain_concat__fragment('/etc/ypldap.conf dc=example,dc=com').with_content(<<-EOS.gsub(/^ {8}/, '')) }
+      it { is_expected.to contain_concat__fragment('/etc/ypldap.conf dc=example,dc=com').with_content(<<-EOS.gsub(%r{^ {8}}, '')) }
 
         directory "127.0.0.1" {
         	basedn "dc=example,dc=com"
@@ -73,8 +73,8 @@ describe 'yp::ldap' do
         	list groupmembers maps to "memberUid"
         }
         EOS
-      it { should contain_service('ypldap') }
-      it { should contain_yp__ldap__directory('dc=example,dc=com') }
+      it { is_expected.to contain_service('ypldap') }
+      it { is_expected.to contain_yp__ldap__directory('dc=example,dc=com') }
     end
   end
 end

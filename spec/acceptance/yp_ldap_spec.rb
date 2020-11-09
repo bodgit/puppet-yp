@@ -1,7 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'yp::ldap' do
-
   pp = <<-EOS
     Package {
       source => $::osfamily ? {
@@ -90,100 +89,100 @@ describe 'yp::ldap' do
 
   case fact('osfamily')
   when 'OpenBSD'
-    it 'should work with no errors' do
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes  => true)
+    it 'works with no errors' do
+      apply_manifest(pp, catch_failures: true)
+      apply_manifest(pp, catch_changes:  true)
     end
 
     describe command('ldapadd -Y EXTERNAL -H ldapi:/// -f /root/example.ldif') do
-      its(:exit_status) { should eq 0 }
+      its(:exit_status) { is_expected.to eq 0 }
     end
 
     # A small sleep so ypldap has chance to pick up the LDAP import
     describe command('sleep 5') do
-      its(:exit_status) { should eq 0 }
+      its(:exit_status) { is_expected.to eq 0 }
     end
 
     describe file('/etc/ypldap.conf') do
-      it { should be_file }
-      it { should be_mode 640 }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'wheel' }
-      #its(:content) { should eq ... }
+      it { is_expected.to be_file }
+      it { is_expected.to be_mode 640 }
+      it { is_expected.to be_owned_by 'root' }
+      it { is_expected.to be_grouped_into 'wheel' }
+      # its(:content) { should eq ... }
     end
 
     describe service('ypldap') do
-      it { should be_running }
+      it { is_expected.to be_running }
     end
 
     describe file('/etc/master.passwd') do
-      it { should be_file }
-      it { should be_mode 600 }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'wheel' }
-      its(:content) { should match /^ \+ : \* :::::::: $/x }
-      its(:content) { should_not match /^ alice :/x }
+      it { is_expected.to be_file }
+      it { is_expected.to be_mode 600 }
+      it { is_expected.to be_owned_by 'root' }
+      it { is_expected.to be_grouped_into 'wheel' }
+      its(:content) { is_expected.to match %r{^ \+ : \* :::::::: $}x }
+      its(:content) { is_expected.not_to match %r{^ alice :}x }
     end
 
     describe file('/etc/passwd') do
-      it { should be_file }
-      it { should be_mode 644 }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'wheel' }
-      its(:content) { should match /^ \+ : \* :0:0::: $/x }
-      its(:content) { should_not match /^ alice :/x }
+      it { is_expected.to be_file }
+      it { is_expected.to be_mode 644 }
+      it { is_expected.to be_owned_by 'root' }
+      it { is_expected.to be_grouped_into 'wheel' }
+      its(:content) { is_expected.to match %r{^ \+ : \* :0:0::: $}x }
+      its(:content) { is_expected.not_to match %r{^ alice :}x }
     end
 
     describe file('/etc/group') do
-      it { should be_file }
-      it { should be_mode 644 }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'wheel' }
-      its(:content) { should match /^ \+ : \* :: $/x }
-      its(:content) { should_not match /^ alice :/x }
+      it { is_expected.to be_file }
+      it { is_expected.to be_mode 644 }
+      it { is_expected.to be_owned_by 'root' }
+      it { is_expected.to be_grouped_into 'wheel' }
+      its(:content) { is_expected.to match %r{^ \+ : \* :: $}x }
+      its(:content) { is_expected.not_to match %r{^ alice :}x }
     end
 
     describe file('/etc/defaultdomain') do
-      it { should be_file }
-      it { should be_mode 644 }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'wheel' }
-      its(:content) { should eq "example.com\n" }
+      it { is_expected.to be_file }
+      it { is_expected.to be_mode 644 }
+      it { is_expected.to be_owned_by 'root' }
+      it { is_expected.to be_grouped_into 'wheel' }
+      its(:content) { is_expected.to eq "example.com\n" }
     end
 
     describe command('domainname') do
-      its(:exit_status) { should eq 0 }
-      its(:stdout) { should eq "example.com\n" }
+      its(:exit_status) { is_expected.to eq 0 }
+      its(:stdout) { is_expected.to eq "example.com\n" }
     end
 
     describe service('ypbind') do
-      it { should be_enabled }
-      it { should be_running }
+      it { is_expected.to be_enabled }
+      it { is_expected.to be_running }
     end
 
     describe command('rpcinfo -p') do
-      its(:exit_status) { should eq 0 }
-      its(:stdout) { should match /100004 \s+ 2 \s+ tcp \s+ \d+ \s+ ypserv/x }
-      its(:stdout) { should match /100004 \s+ 2 \s+ udp \s+ \d+ \s+ ypserv/x }
-      its(:stdout) { should match /100007 \s+ 2 \s+ tcp \s+ \d+ \s+ ypbind/x }
-      its(:stdout) { should match /100007 \s+ 2 \s+ udp \s+ \d+ \s+ ypbind/x }
+      its(:exit_status) { is_expected.to eq 0 }
+      its(:stdout) { is_expected.to match %r{100004 \s+ 2 \s+ tcp \s+ \d+ \s+ ypserv}x }
+      its(:stdout) { is_expected.to match %r{100004 \s+ 2 \s+ udp \s+ \d+ \s+ ypserv}x }
+      its(:stdout) { is_expected.to match %r{100007 \s+ 2 \s+ tcp \s+ \d+ \s+ ypbind}x }
+      its(:stdout) { is_expected.to match %r{100007 \s+ 2 \s+ udp \s+ \d+ \s+ ypbind}x }
     end
 
     describe user('alice') do
-      it { should exist }
-      it { should belong_to_primary_group 'alice' }
-      it { should have_uid 2000 }
-      it { should have_home_directory '/home/alice' }
-      it { should have_login_shell '/bin/bash' }
+      it { is_expected.to exist }
+      it { is_expected.to belong_to_primary_group 'alice' }
+      it { is_expected.to have_uid 2000 }
+      it { is_expected.to have_home_directory '/home/alice' }
+      it { is_expected.to have_login_shell '/bin/bash' }
     end
 
     describe group('alice') do
-      it { should exist }
-      it { should have_gid 2000 }
+      it { is_expected.to exist }
+      it { is_expected.to have_gid 2000 }
     end
   else
-    it 'should not work' do
-      apply_manifest(pp, :expect_failures => true)
+    it 'does not work' do
+      apply_manifest(pp, expect_failures: true)
     end
   end
 end
