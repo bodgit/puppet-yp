@@ -1,11 +1,10 @@
 # yp
 
-Tested with Travis CI
-
 [![Build Status](https://travis-ci.org/bodgit/puppet-yp.svg?branch=master)](https://travis-ci.org/bodgit/puppet-yp)
-[![Coverage Status](https://coveralls.io/repos/bodgit/puppet-yp/badge.svg?branch=master&service=github)](https://coveralls.io/github/bodgit/puppet-yp?branch=master)
-[![Puppet Forge](http://img.shields.io/puppetforge/v/bodgit/yp.svg)](https://forge.puppetlabs.com/bodgit/yp)
-[![Dependency Status](https://gemnasium.com/bodgit/puppet-yp.svg)](https://gemnasium.com/bodgit/puppet-yp)
+[![Codecov](https://img.shields.io/codecov/c/github/bodgit/puppet-yp)](https://codecov.io/gh/bodgit/puppet-yp)
+[![Puppet Forge version](http://img.shields.io/puppetforge/v/bodgit/yp)](https://forge.puppetlabs.com/bodgit/yp)
+[![Puppet Forge downloads](https://img.shields.io/puppetforge/dt/bodgit/yp)](https://forge.puppetlabs.com/bodgit/yp)
+[![Puppet Forge - PDK version](https://img.shields.io/puppetforge/pdk-version/bodgit/yp)](https://forge.puppetlabs.com/bodgit/yp)
 
 #### Table of Contents
 
@@ -202,7 +201,8 @@ Class['::portmap'] ~> Class['::yp::ldap'] ~> Class['::yp::bind'] <~ Class['::yp'
 The reference documentation is generated with
 [puppet-strings](https://github.com/puppetlabs/puppet-strings) and the latest
 version of the documentation is hosted at
-[https://bodgit.github.io/puppet-yp/](https://bodgit.github.io/puppet-yp/).
+[https://bodgit.github.io/puppet-yp/](https://bodgit.github.io/puppet-yp/)
+and available also in the [REFERENCE.md](https://github.com/bodgit/puppet-yp/blob/master/REFERENCE.md).
 
 ## Limitations
 
@@ -211,7 +211,7 @@ however to do that I realised I had classes for everything bar `ypserv` so I
 added that and made sure it was portable enough to work on one other OS. It
 works however I don't expect many people to still be using traditional YP/NIS.
 
-This module has been built on and tested against Puppet 4.4.0 and higher.
+This module has been built on and tested against Puppet 5 and higher.
 
 The module has been tested on:
 
@@ -220,12 +220,13 @@ The module has been tested on:
 
 ## Development
 
-The module has both [rspec-puppet](http://rspec-puppet.com) and
+The module relies on [PDK](https://puppet.com/docs/pdk/1.x/pdk.html) and has
+both [rspec-puppet](http://rspec-puppet.com) and
 [beaker-rspec](https://github.com/puppetlabs/beaker-rspec) tests. Run them
 with:
 
 ```
-$ bundle exec rake test
+$ bundle exec rake spec
 $ PUPPET_INSTALL_TYPE=agent PUPPET_INSTALL_VERSION=x.y.z bundle exec rake beaker:<nodeset>
 ```
 
