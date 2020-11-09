@@ -16,7 +16,7 @@ define yp::serv::map (
   } else {
     $target = yp::map_to_make_target($map)
 
-    case $::osfamily {
+    case $facts['os']['family'] {
       'OpenBSD': {
         $make     = "make ${target}"
         $makefile = "${yp_dir}/${domain}/Makefile"

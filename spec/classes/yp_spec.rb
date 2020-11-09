@@ -1,41 +1,44 @@
 require 'spec_helper'
 
 describe 'yp' do
-
   let(:params) do
     {
-      :domain => 'example.com'
+      domain: 'example.com',
     }
   end
 
   context 'on unsupported distributions' do
     let(:facts) do
       {
-        :osfamily => 'Unsupported'
+        os: {
+          family: 'Unsupported',
+        },
       }
     end
 
-    it { expect { should compile }.to raise_error(/not supported on Unsupported/) }
+    it { is_expected.to compile.and_raise_error(%r{not supported on Unsupported}) }
   end
 
   on_supported_os.each do |os, facts|
-    context "on #{os}", :compile do
+    context "on #{os}" do
       let(:facts) do
         facts
       end
 
-      it { should contain_class('yp') }
-      it { should contain_class('yp::config') }
-      it { should contain_class('yp::params') }
+      it { is_expected.to compile.with_all_deps }
 
-      it { should contain_exec('domainname example.com') }
-      it { should contain_file('/var/yp') }
+      it { is_expected.to contain_class('yp') }
+      it { is_expected.to contain_class('yp::config') }
+      it { is_expected.to contain_class('yp::params') }
+
+      it { is_expected.to contain_exec('domainname example.com') }
+      it { is_expected.to contain_file('/var/yp') }
 
       case facts[:osfamily]
       when 'OpenBSD'
-        it { should contain_file('/etc/defaultdomain') }
+        it { is_expected.to contain_file('/etc/defaultdomain') }
       when 'RedHat'
-        it { should contain_augeas('/etc/sysconfig/network/NISDOMAIN') }
+        it { is_expected.to contain_augeas('/etc/sysconfig/network/NISDOMAIN') }
       end
     end
   end

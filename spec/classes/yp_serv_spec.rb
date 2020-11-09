@@ -1,47 +1,46 @@
 require 'spec_helper'
 
 describe 'yp::serv' do
-
   let(:params) do
     {
-      :domain => 'example.com',
+      domain: 'example.com',
     }
   end
 
   context 'on unsupported distributions' do
     let(:facts) do
       {
-        :osfamily => 'Unsupported'
+        os: {
+          family: 'Unsupported',
+        },
       }
     end
 
-    it { expect { should compile }.to raise_error(/not supported on Unsupported/) }
+    it { is_expected.to compile.and_raise_error(%r{not supported on Unsupported}) }
   end
 
   on_supported_os.each do |os, facts|
-    context "on #{os}", :compile do
+    context "on #{os}" do
       let(:facts) do
-        facts.merge(
-          {
-            :concat_basedir => '/tmp'
-          }
-        )
+        facts
       end
 
-      it { should contain_class('yp::serv') }
-      it { should contain_class('yp::serv::config') }
-      it { should contain_class('yp::serv::install') }
-      it { should contain_class('yp::serv::service') }
-      it { should contain_class('yp::params') }
+      it { is_expected.to compile.with_all_deps }
 
-      it { should contain_exec("awk '{ if ($1 != \"\" && $1 !~ \"#\") print $0\"\\t\"$0 }' /var/yp/ypservers | makedbm - /var/yp/example.com/ypservers") }
-      it { should contain_file('/var/yp/ypservers') }
-      it { should contain_file('/var/yp/example.com') }
-      it { should contain_service('ypserv') }
+      it { is_expected.to contain_class('yp::serv') }
+      it { is_expected.to contain_class('yp::serv::config') }
+      it { is_expected.to contain_class('yp::serv::install') }
+      it { is_expected.to contain_class('yp::serv::service') }
+      it { is_expected.to contain_class('yp::params') }
+
+      it { is_expected.to contain_exec("awk '{ if ($1 != \"\" && $1 !~ \"#\") print $0\"\\t\"$0 }' /var/yp/ypservers | makedbm - /var/yp/example.com/ypservers") }
+      it { is_expected.to contain_file('/var/yp/ypservers') }
+      it { is_expected.to contain_file('/var/yp/example.com') }
+      it { is_expected.to contain_service('ypserv') }
 
       case facts[:osfamily]
       when 'OpenBSD'
-        it { should have_package_resource_count(0) }
+        it { is_expected.to have_package_resource_count(0) }
 
         {
           'aliases'   => ['mail.aliases', 'mail.byaddr'],
@@ -58,12 +57,12 @@ describe 'yp::serv' do
           'services'  => ['services.byname'],
         }.each do |k, v|
           v.each do |m|
-            it { should contain_yp__serv__map(m) }
+            it { is_expected.to contain_yp__serv__map(m) } # rubocop:disable RepeatedExample
           end
-          it { should contain_exec("make #{k}") }
+          it { is_expected.to contain_exec("make #{k}") }
         end
-        it { should contain_file('/var/yp/Makefile') }
-        it { should contain_file('/var/yp/example.com/Makefile') }
+        it { is_expected.to contain_file('/var/yp/Makefile') }
+        it { is_expected.to contain_file('/var/yp/example.com/Makefile') }
       when 'RedHat'
         {
           'amd.home'       => ['amd.home'],
@@ -91,14 +90,13 @@ describe 'yp::serv' do
           'timezone'       => ['timezone.byname'],
         }.each do |k, v|
           v.each do |m|
-            it { should contain_yp__serv__map(m) }
+            it { is_expected.to contain_yp__serv__map(m) } # rubocop:disable RepeatedExample
           end
-          it { should contain_exec("make -f ../Makefile #{k}") }
+          it { is_expected.to contain_exec("make -f ../Makefile #{k}") }
         end
-        it { should contain_package('ypserv') }
-        it { should contain_service('yppasswdd') }
-        it { should contain_service('ypxfrd') }
-      else
+        it { is_expected.to contain_package('ypserv') }
+        it { is_expected.to contain_service('yppasswdd') }
+        it { is_expected.to contain_service('ypxfrd') }
       end
     end
   end

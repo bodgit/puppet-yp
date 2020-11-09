@@ -60,7 +60,7 @@ define yp::ldap::directory (
   Bodgitlib::LDAP::Filter           $user_filter      = '(objectClass=posixAccount)',
 ) {
 
-  if ! defined(Class['::yp::ldap']) {
+  if ! defined(Class['yp::ldap']) {
     fail('You must include the yp::ldap base class before using any yp::ldap defined resources')
   }
 

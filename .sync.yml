@@ -1,0 +1,49 @@
+---
+common:
+  disable_legacy_facts: true
+appveyor.yml:
+  delete: true
+.gitlab-ci.yml:
+  delete: true
+.travis.yml:
+  notifications:
+    email: true
+  secure: 'OUDapVn58wDReSQ8yxrIE7cm2zqnB+022DCALpRpNL9wZf7F8TMnkQU0FnKkV1hND0k4sZ/6FsBLyudhw/k2X0qbbSErAYY9mh3IrZY/A4C2h5sSROb64m/dfER9Oo8MXwdOOZkqh2zEFhR0RVoa9OYqWj6szgRA9RNUF/X7Ldqso9gAkqSgeVb81t26z9RxScSFjDbdsx/VSis5F6wxGxdlvIxh+cqhBEuY14H9bdDZa7IfgFBXcnmA2q8etkPx4x4Vbw6JvecXsjlmIFdy1ZGkcdqh4eUPSaNywa16fkhRHLNjcoSm/JP8WpH2CUGMbtOg6Fz2RIZ+9K3PPIBt5eQgzYZy8hk6RrE7OCBVRFrBDuUSLcTzL6Zx2GSt32XZLwtSrQ3u9l8FIWyoyXheGF9KxyimcOd69q+LHMnHQ9MZvg2HzxC76gOsCVlEemQi5XUX2/FH/VecQ2xqKElIPlH+YV/yvbfzgldFXm5tgOBRy62akFD8qx8bJY2/avyGuX0EMkCDxXyarM6ebuBjM3pLQa5H0/8WA80weCZ9O3ZROc0jvAfw+PvAhC0JNAIvTAyo6dK0/6a7bTQfOmc6D8T4Sbf2M0jHlDmWhtTlnuAsG2AwddRrFC7x1qCh09SC2R8+YaQphlsqplMae4s+RctX1nT95sIcEohRxCM1ScE='
+  simplecov: true
+  user: 'bodgit'
+.vscode/extensions.json:
+  delete: true
+Gemfile:
+  required:
+    ':development':
+      - gem: 'puppet-lint-absolute_classname-check'
+      - gem: 'puppet-lint-alias-check'
+      - gem: 'puppet-lint-empty_string-check'
+      - gem: 'puppet-lint-file_ensure-check'
+      - gem: 'puppet-lint-file_source_rights-check'
+      - gem: 'puppet-lint-fileserver-check'
+        git: 'https://github.com/bodgit/puppet-lint-fileserver-check.git'
+        branch: 'puppet-lint-2.x'
+      - gem: 'puppet-lint-leading_zero-check'
+      - gem: 'puppet-lint-spaceship_operator_without_tag-check'
+      - gem: 'puppet-lint-trailing_comma-check'
+      - gem: 'puppet-lint-undef_in_function-check'
+      - gem: 'puppet-lint-unquoted_string-check'
+      - gem: 'puppet-lint-variable_contains_upcase'
+      - gem: 'puppet-lint-version_comparison-check'
+  optional:
+    ':development':
+      - gem: 'github_changelog_generator'
+        version: '~> 1.15'
+        condition: "Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.3.0')"
+    ':system_tests':
+      - gem: 'beaker-vagrant'
+      - gem: 'beaker-rspec'
+      - gem: 'beaker-puppet_install_helper'
+      - gem: 'beaker-module_install_helper'
+Rakefile:
+  linter_fail_on_warnings: true
+spec/spec_helper.rb:
+  mock_with: ':rspec'
+  coverage_report: true
+  minimum_code_coverage_percentage: 100

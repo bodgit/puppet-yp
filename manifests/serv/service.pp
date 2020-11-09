@@ -29,12 +29,12 @@ class yp::serv::service {
 
   if $::yp::serv::has_ypxfrd {
 
-    $ypxfrd_ensure = size($::yp::serv::slaves) ? {
-      0       => stopped,
+    $ypxfrd_ensure = $::yp::serv::slaves ? {
+      undef   => stopped,
       default => running,
     }
-    $ypxfrd_enable = size($::yp::serv::slaves) ? {
-      0       => false,
+    $ypxfrd_enable = $::yp::serv::slaves ? {
+      undef   => false,
       default => true,
     }
 

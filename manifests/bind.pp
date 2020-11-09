@@ -64,12 +64,12 @@ class yp::bind (
   Boolean                                   $manage_package = $::yp::params::bind_manage_package,
   Optional[String]                          $package_name   = $::yp::params::bind_package_name,
   String                                    $service_name   = $::yp::params::bind_service_name,
-) inherits ::yp::params {
+) inherits yp::params {
 
-  contain ::yp::bind::install
-  contain ::yp::bind::config
-  contain ::yp::bind::service
+  contain yp::bind::install
+  contain yp::bind::config
+  contain yp::bind::service
 
-  Class['::yp::bind::install'] -> Class['::yp::bind::config']
-    ~> Class['::yp::bind::service']
+  Class['yp::bind::install'] -> Class['yp::bind::config']
+    ~> Class['yp::bind::service']
 }

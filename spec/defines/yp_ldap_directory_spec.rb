@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'yp::ldap::directory' do
-
   let(:pre_condition) do
     'class { "::yp::ldap": domain => "example.com" }'
   end
@@ -17,17 +16,16 @@ describe 'yp::ldap::directory' do
   end
 
   on_supported_os.each do |os, facts|
+    next if os !~ %r{^openbsd}
 
-    next if os !~ /^openbsd/
-
-    context "on #{os}", :compile do
+    context "on #{os}" do
       let(:facts) do
-        facts.merge({
-          :concat_basedir => '/tmp',
-        })
+        facts
       end
 
-      it { should contain_concat__fragment('/etc/ypldap.conf dc=example,dc=com').with_content(<<-EOS.gsub(/^ {8}/, '')) }
+      it { is_expected.to compile.with_all_deps }
+
+      it { is_expected.to contain_concat__fragment('/etc/ypldap.conf dc=example,dc=com').with_content(<<-EOS.gsub(%r{^ {8}}, '')) }
 
         directory "127.0.0.1" {
         	basedn "dc=example,dc=com"
@@ -53,7 +51,7 @@ describe 'yp::ldap::directory' do
         	list groupmembers maps to "memberUid"
         }
         EOS
-      it { should contain_yp__ldap__directory('dc=example,dc=com') }
+      it { is_expected.to contain_yp__ldap__directory('dc=example,dc=com') }
     end
   end
 end

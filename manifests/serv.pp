@@ -98,16 +98,16 @@ class yp::serv (
   Optional[String]                          $ypxfrd_service_name    = $::yp::params::serv_ypxfrd_service_name,
   Optional[Array[IP::Address::NoSubnet, 1]] $slaves                 = undef,
   Stdlib::Absolutepath                      $yp_dir                 = $::yp::params::yp_dir,
-) inherits ::yp::params {
+) inherits yp::params {
 
-  if defined(Class['::yp::ldap']) {
+  if defined(Class['yp::ldap']) {
     fail('yp::ldap and yp::serv are mutually exclusive.')
   }
 
-  contain ::yp::serv::install
-  contain ::yp::serv::config
-  contain ::yp::serv::service
+  contain yp::serv::install
+  contain yp::serv::config
+  contain yp::serv::service
 
-  Class['::yp::serv::install'] -> Class['::yp::serv::config']
-    ~> Class['::yp::serv::service']
+  Class['yp::serv::install'] -> Class['yp::serv::config']
+    ~> Class['yp::serv::service']
 }
